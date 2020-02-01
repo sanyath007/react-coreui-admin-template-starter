@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,6 +26,9 @@ class Patients extends Component {
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> Patients <small className="text-muted">example</small>
+                <Link to="/patients/new" className="btn btn-primary btn-sm float-right">
+                  <i className="fa fa-user-plus"></i> เพิ่ม
+                </Link>
               </CardHeader>
               <CardBody>
                 {/* #========== Spinner ==========# */}

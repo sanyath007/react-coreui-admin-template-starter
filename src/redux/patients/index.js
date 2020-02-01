@@ -1,5 +1,6 @@
-import { fetchPatients } from './actions';
+import { fetchPatients, addPatient } from './actions';
 
 export {
-  fetchPatients
+  fetchPatients,
+  addPatient
 };
