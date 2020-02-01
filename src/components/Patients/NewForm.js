@@ -121,6 +121,8 @@ class NewForm extends Component {
     this.props.addPatient(newPatient);
 
     this.setState(this.initialState);
+
+    this.props.history.push('/patients');
   }
 
   toggle() {

@@ -9,6 +9,8 @@ import { fetchPatients } from '../../redux/patients';
 class Patients extends Component {
   static propTypes = {
     patients: PropTypes.array.isRequired,
+    pager: PropTypes.object,
+    isSuccess: PropTypes.object,
     fetchPatients: PropTypes.func.isRequired
   };
 
@@ -16,11 +18,27 @@ class Patients extends Component {
     this.props.fetchPatients();
   }
 
-  render() {
-    const { patients } = this.props;
+  handlePaginateLink(e, link) {
+    e.preventDefault();
     
+    console.log(link);
+    this.props.fetchPatients(link);
+  }
+
+  render() {
+    const { patients, pager, isSuccess } = this.props;
+    
+    const setPageItemClass = (link) => link ? "page-item" : "page-item disabled";
+
     return (
       <div className="animated fadeIn">
+        { isSuccess && isSuccess.status && (
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+            I am an alert and I can be dismissed!        
+          </div>
+        )}
+
         <Row>
           <Col xl={6}>
             <Card>
@@ -45,7 +63,7 @@ class Patients extends Component {
                       <th scope="col">HN</th>
                       <th scope="col">Name</th>
                       <th scope="col">Tel</th>
-                      <th scope="col">Actions</th>
+                      <th scope="col" style={{ textAlign: "center" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -55,11 +73,40 @@ class Patients extends Component {
                         <td>{ patient.hn }</td>
                         <td>{ patient.pname + patient.fname + ' ' + patient.lname }</td>
                         <td>{ patient.tel }</td>
-                        <td>&nbsp;</td>
+                        <td style={{ textAlign: "center" }}>
+                          <Link to="/patients/new" className="btn btn-warning btn-sm mr-1">
+                            <i className="fa fa-edit"></i>
+                          </Link>
+                          <Link to="/patients/new" className="btn btn-danger btn-sm">
+                            <i className="fa fa-trash-o"></i>
+                          </Link> 
+                        </td>
                       </tr>
                     )) }
                   </tbody>
                 </Table>
+                
+                { pager && (
+                  <nav aria-label="..." className="float-right">
+                    <ul className="pagination">
+                      <li className={setPageItemClass(pager.prev_page_url)}>
+                        <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.prev_page_url)}>Previous</a>
+                      </li>
+                      <li className="page-item">
+                        <a className="page-link" href="#">1</a>
+                      </li>
+                      <li className="page-item active" aria-current="page">
+                        <a className="page-link" href="#">2 <span className="sr-only">(current)</span></a>
+                      </li>
+                      <li className="page-item">
+                        <a className="page-link" href="#">3</a>
+                      </li>
+                      <li className={setPageItemClass(pager.next_page_url)}>
+                        <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.next_page_url)}>Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+                )}
               </CardBody>
             </Card>
           </Col>
@@ -70,7 +117,9 @@ class Patients extends Component {
 }
 
 const mapStateToProps = state => ({
-  patients: state.patient.patients
+  patients: state.patient.patients,
+  pager: state.patient.pager,
+  isSuccess: state.patient.success
 });
 
 export default connect(
