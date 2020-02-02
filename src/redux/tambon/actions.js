@@ -3,10 +3,8 @@ import {
   FETCH_TAMBON_SUCCESS
 } from './types';
 
-const url = 'http://mnrhweb.com/api/imc';
-
 export const fetchTambons = () => dispatch => {
-  axios.get(`${url}/tambons`)
+  axios.get(`/api/imc/tambons`)
     .then(res => {
       dispatch({
         type: FETCH_TAMBON_SUCCESS,

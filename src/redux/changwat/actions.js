@@ -3,10 +3,8 @@ import {
   FETCH_CHANGWAT_SUCCESS
 } from './types';
 
-const url = 'http://mnrhweb.com/api/imc';
-
 export const fetchChangwats = () => dispatch => {
-  axios.get(`${url}/changwats`)
+  axios.get(`/api/imc/changwats`)
     .then(res => {
       dispatch({
         type: FETCH_CHANGWAT_SUCCESS,

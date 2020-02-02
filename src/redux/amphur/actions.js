@@ -3,10 +3,8 @@ import {
   FETCH_AMPHUR_SUCCESS
 } from './types';
 
-const url = 'http://mnrhweb.com/api/imc';
-
 export const fetchAmphurs = () => dispatch => {
-  axios.get(`${url}/amphurs`)
+  axios.get(`/api/imc/amphurs`)
     .then(res => {
       dispatch({
         type: FETCH_AMPHUR_SUCCESS,

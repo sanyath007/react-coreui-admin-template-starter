@@ -12,7 +12,7 @@ export const login = (credentials, history) => dispatch => {
   console.log('Login Action')
   dispatch({ type: AUTH_LOGIN_REQUEST });
   
-  axios.post(`http://mnrhweb.com/api/auth/login`, credentials, {
+  axios.post(`/api/auth/login`, credentials, {
       headers: {
         'Content-Type': 'application/json'
       }
