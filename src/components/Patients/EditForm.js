@@ -19,12 +19,12 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { addPatient } from '../../redux/patients';
+import { updatePatient, fetchPatient } from '../../redux/patients';
 import { fetchChangwats } from '../../redux/changwat';
 import { fetchAmphurs } from '../../redux/amphur';
 import { fetchTambons } from '../../redux/tambon';
 
-class NewForm extends Component {
+class EditForm extends Component {
   constructor (props) {
     super(props);
 
@@ -36,7 +36,7 @@ class NewForm extends Component {
       fname: '',
       lname: '',
       birthdate: '',
-      ageY: '',
+      age_y: '',
       sex: '',
       tel: '',
       address: '',
@@ -62,23 +62,47 @@ class NewForm extends Component {
   }
 
   static propTypes = {
+    patient: PropTypes.any,
     changwats: PropTypes.array.isRequired,
     amphurs: PropTypes.array.isRequired,
     tambons: PropTypes.array.isRequired,
-    addPatient: PropTypes.func.isRequired,
+    updatePatient: PropTypes.func.isRequired,
+    fetchPatient: PropTypes.func.isRequired,
     fetchChangwats: PropTypes.func.isRequired,
     fetchAmphurs: PropTypes.func.isRequired,
     fetchTambons: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
+    console.log('Patients EditForm component mounted')
+    // const id = this.props.match.params.id;
+    // this.props.fetchPatient(id)
+
     this.props.fetchChangwats();
     this.props.fetchAmphurs();
     this.props.fetchTambons();
   }
+  
+  componentDidUpdate(nextProps) {
+    const { patient } = this.props;
+    if (nextProps.patient !== patient) {
+      const { created_at, updated_at, ...pt } = patient;
 
-  handleChange(event) {
-    const { name, value } = event.target;
+      this.setState(prevState => {
+        let { filterTambons, filterAmphurs, modal } = prevState;
+        
+        let newState = { filterTambons, filterAmphurs, modal, ...pt };
+        
+        return {
+          ...newState
+        };
+      });
+
+    }
+  }
+
+  handleChange(e) {
+    const { name, value } = e.target;
 
     this.setState({ [name]: value });
     
@@ -107,13 +131,11 @@ class NewForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     
-    const { filterAmphurs, filterTambons, modal, ...newPatient } = this.state;
+    const { filterAmphurs, filterTambons, modal, ...editedPatient } = this.state;
 
-    this.props.addPatient(newPatient);
+    this.props.updatePatient(editedPatient.id, editedPatient, this.props.history);
 
     this.setState(this.initialState);
-
-    this.props.history.push('/patients');
   }
 
   toggle() {
@@ -143,7 +165,7 @@ class NewForm extends Component {
                         id="pid"
                         name="pid"
                         type="text"
-                        value={this.state.pid}
+                        value={this.state.pid || ''}
                         onChange={this.handleChange}
                         placeholder="PID"
                       />
@@ -154,7 +176,7 @@ class NewForm extends Component {
                         id="hn"
                         name="hn"
                         type="text"
-                        value={this.state.hn}
+                        value={this.state.hn || ''}
                         onChange={this.handleChange}
                         placeholder="HN"
                       />
@@ -165,7 +187,7 @@ class NewForm extends Component {
                         id="cid"
                         name="cid"
                         type="text"
-                        value={this.state.cid}
+                        value={this.state.cid || ''}
                         onChange={this.handleChange}
                         placeholder="เลขบัตรประชาชน"
                       />
@@ -179,7 +201,7 @@ class NewForm extends Component {
                         type="select"
                         id="pname"
                         name="pname"
-                        value={this.state.pname}
+                        value={this.state.pname || ''}
                         onChange={this.handleChange}
                       >
                         <option value="">Choose...</option>
@@ -196,7 +218,7 @@ class NewForm extends Component {
                         id="fname"
                         name="fname"
                         type="text"
-                        value={this.state.fname}
+                        value={this.state.fname || ''}
                         onChange={this.handleChange}
                         placeholder="ชื่อ"
                       />
@@ -207,7 +229,7 @@ class NewForm extends Component {
                         id="lname"
                         name="lname"
                         type="text"
-                        value={this.state.lname}
+                        value={this.state.lname || ''}
                         onChange={this.handleChange}
                         placeholder="สกุล"
                       />
@@ -221,18 +243,18 @@ class NewForm extends Component {
                         id="birthdate"
                         name="birthdate"
                         type="text"
-                        value={this.state.birthdate}
+                        value={this.state.birthdate || ''}
                         onChange={this.handleChange}
                         placeholder="วันเกิด"
                       />
                     </Col>
                     <Col md="3" className="form-group">
-                      <Label htmlFor="ageY">อายุ</Label>
+                      <Label htmlFor="age_y">อายุ</Label>
                       <Input
-                        id="ageY"
-                        name="ageY"
+                        id="age_y"
+                        name="age_y"
                         type="text"
-                        value={this.state.ageY}
+                        value={this.state.age_y || ''}
                         onChange={this.handleChange}
                         placeholder="อายุ"
                       />
@@ -242,7 +264,7 @@ class NewForm extends Component {
                       <Input type="select"
                         id="sex"
                         name="sex"
-                        value={this.state.sex}
+                        value={this.state.sex || ''}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -258,7 +280,7 @@ class NewForm extends Component {
                       id="address"
                       name="address"
                       type="text"
-                      value={this.state.address}
+                      value={this.state.address || ''}
                       onChange={this.handleChange}
                       placeholder="ที่อยู่"
                     />
@@ -271,7 +293,7 @@ class NewForm extends Component {
                         id="road"
                         name="road"
                         type="text"
-                        value={this.state.road}
+                        value={this.state.road || ''}
                         onChange={this.handleChange}
                         placeholder="ถนน"
                       />
@@ -282,7 +304,7 @@ class NewForm extends Component {
                         id="moo"
                         name="moo"
                         type="text"
-                        value={this.state.moo}
+                        value={this.state.moo || ''}
                         onChange={this.handleChange}
                         placeholder="หมู่"
                         />
@@ -295,7 +317,7 @@ class NewForm extends Component {
                       <Input type="select" 
                         id="changwat"
                         name="changwat"
-                        value={this.state.changwat}
+                        value={this.state.changwat || ''}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -309,7 +331,7 @@ class NewForm extends Component {
                       <Input type="select"
                         id="amphur"
                         name="amphur"
-                        value={this.state.amphur}
+                        value={this.state.amphur || ''}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -323,7 +345,7 @@ class NewForm extends Component {
                       <Input type="select"
                         id="tambon"
                         name="tambon"
-                        value={this.state.tambon}
+                        value={this.state.tambon || ''}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -341,7 +363,7 @@ class NewForm extends Component {
                         id="zipcode"
                         name="zipcode"
                         type="text"
-                        value={this.state.zipcode}
+                        value={this.state.zipcode || ''}
                         onChange={this.handleChange}
                         placeholder="รหัสไปรษณีย์"
                       />
@@ -352,7 +374,7 @@ class NewForm extends Component {
                         id="latlong"
                         name="latlong"
                         type="text"
-                        value={this.state.latlong}
+                        value={this.state.latlong || ''}
                         onChange={this.handleChange}
                         onClick={this.toggle}
                         placeholder="ละติจูด, ลองติจูด"
@@ -364,7 +386,7 @@ class NewForm extends Component {
                         id="tel"
                         name="tel"
                         type="text"
-                        value={this.state.tel}
+                        value={this.state.tel || ''}
                         onChange={this.handleChange}
                         placeholder="โทรศัพท์ติดต่อ"
                       />
@@ -372,8 +394,8 @@ class NewForm extends Component {
                   </Row>
                 </CardBody>
                 <CardFooter style={{ textAlign: "right" }}>
-                  <Button type="submit" size="sm" color="primary">
-                    <i className="fa fa-dot-circle-o"></i> เพิ่มผู้ป่วย
+                  <Button type="submit" size="sm" color="warning">
+                    <i className="fa fa-dot-circle-o"></i> แก้ไขผู้ป่วย
                   </Button>
                 </CardFooter>
               </Form>
@@ -403,6 +425,7 @@ class NewForm extends Component {
 }
 
 const mapStateToProps = state => ({
+  patient: state.patient.patient,
   changwats: state.changwat.changwats,
   amphurs: state.amphur.amphurs,
   tambons: state.tambon.tambons
@@ -411,9 +434,10 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { 
-    addPatient,
+    updatePatient,
+    fetchPatient,
     fetchChangwats,
     fetchAmphurs,
     fetchTambons
   }
-)(NewForm);
+)(EditForm);

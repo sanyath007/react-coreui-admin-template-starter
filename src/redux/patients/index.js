@@ -1,6 +1,8 @@
-import { fetchPatients, addPatient } from './actions';
-
 export {
   fetchPatients,
-  addPatient
-};
+  fetchPatient,
+  addPatient,
+  updatePatient,
+  deletePatient,
+  hideAlert
+} from './actions';

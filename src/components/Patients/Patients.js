@@ -1,46 +1,70 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fetchPatients } from '../../redux/patients';
+import { fetchPatients, fetchPatient, hideAlert } from '../../redux/patients';
 
 class Patients extends Component {
   static propTypes = {
     patients: PropTypes.array.isRequired,
     pager: PropTypes.object,
     isSuccess: PropTypes.object,
-    fetchPatients: PropTypes.func.isRequired
+    isError: PropTypes.object,
+    fetchPatients: PropTypes.func.isRequired,
+    fetchPatient: PropTypes.func.isRequired,
+    hideAlert: PropTypes.func.isRequired
   };
 
   componentDidMount() {
+    console.log('Patients component mounted')
     this.props.fetchPatients();
+
+    setInterval(() => {
+      this.props.hideAlert()
+    }, 5000)
   }
 
   handlePaginateLink(e, link) {
     e.preventDefault();
     
-    console.log(link);
     this.props.fetchPatients(link);
   }
 
+  handleEdit = (e, id) => {
+    e.preventDefault();
+
+    this.props.fetchPatient(id);
+
+    this.props.history.push(`/patients/edit/${id}`)
+  }
+
   render() {
-    const { patients, pager, isSuccess } = this.props;
+    const { patients, pager, isSuccess, isError } = this.props;
     
     const setPageItemClass = (link) => link ? "page-item" : "page-item disabled";
+    const setCurrentPageClass = (page) => page === pager.current_page ? "page-item active" : "page-item";
 
     return (
       <div className="animated fadeIn">
+
         { isSuccess && isSuccess.status && (
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <button type="button" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-            I am an alert and I can be dismissed!        
+          <div className="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" className="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i className="icon-check"></i> { isSuccess.message }        
+          </div>
+        )}
+
+        { isError && (
+          <div className="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" className="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <i className="icon-check"></i> { isError.message }        
           </div>
         )}
 
         <Row>
-          <Col xl={6}>
+          <Col xs="12" md="12" sm="6">
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> Patients <small className="text-muted">example</small>
@@ -74,10 +98,13 @@ class Patients extends Component {
                         <td>{ patient.pname + patient.fname + ' ' + patient.lname }</td>
                         <td>{ patient.tel }</td>
                         <td style={{ textAlign: "center" }}>
-                          <Link to="/patients/new" className="btn btn-warning btn-sm mr-1">
+                          <Link
+                            to={`/patients/edit/${patient.id}`}
+                            onClick={(e) => this.handleEdit(e, patient.id)} 
+                            className="btn btn-warning btn-sm mr-1">
                             <i className="fa fa-edit"></i>
                           </Link>
-                          <Link to="/patients/new" className="btn btn-danger btn-sm">
+                          <Link to="/patients/delete" className="btn btn-danger btn-sm">
                             <i className="fa fa-trash-o"></i>
                           </Link> 
                         </td>
@@ -92,17 +119,24 @@ class Patients extends Component {
                       <li className={setPageItemClass(pager.prev_page_url)}>
                         <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.prev_page_url)}>Previous</a>
                       </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">1</a>
-                      </li>
-                      <li className="page-item active" aria-current="page">
-                        <a className="page-link" href="#">2 <span className="sr-only">(current)</span></a>
-                      </li>
-                      <li className="page-item">
-                        <a className="page-link" href="#">3</a>
-                      </li>
+
+                      { Array.from({ length: pager.last_page}, (val, key) => (
+                        <li className={setCurrentPageClass(key+1)} aria-current="page" key={key+1}>
+                          <a 
+                            className="page-link" 
+                            href="#"
+                            onClick={e => this.handlePaginateLink(e, `${pager.path}?page=${key+1}`)}
+                          >
+                              {key+1} <span className="sr-only">(current)</span>
+                          </a>
+                        </li>                    
+                      ))}
+
                       <li className={setPageItemClass(pager.next_page_url)}>
-                        <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.next_page_url)}>Next</a>
+                        <a 
+                          href="#"
+                          className="page-link"
+                          onClick={e => this.handlePaginateLink(e, pager.next_page_url)}>Next</a>
                       </li>
                     </ul>
                   </nav>
@@ -119,10 +153,15 @@ class Patients extends Component {
 const mapStateToProps = state => ({
   patients: state.patient.patients,
   pager: state.patient.pager,
-  isSuccess: state.patient.success
+  isSuccess: state.patient.success,
+  isError: state.patient.errors
 });
 
 export default connect(
   mapStateToProps,
-  { fetchPatients }
+  {
+    fetchPatients,
+    fetchPatient,
+    hideAlert
+  }
 )(Patients);
