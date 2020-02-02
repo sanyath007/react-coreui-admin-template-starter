@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 
 import { fetchPatients, fetchPatient, deletePatient, hideAlert } from '../../redux/patients';
 
+import Notification from './../Notifications/Notification';
+
 class Patients extends Component {
   static propTypes = {
     patients: PropTypes.array.isRequired,
@@ -19,12 +21,7 @@ class Patients extends Component {
   };
 
   componentDidMount() {
-    console.log('Patients component mounted')
     this.props.fetchPatients();
-
-    setTimeout(() => {
-      this.props.hideAlert()
-    }, 5000);
   }
 
   handlePaginateLink(e, link) {
@@ -59,17 +56,17 @@ class Patients extends Component {
       <div className="animated fadeIn">
 
         { isSuccess && isSuccess.status && (
-          <div className="alert alert-success alert-dismissible fade show" role="alert">
-            <button type="button" className="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <i className="icon-check"></i> { isSuccess.message }        
-          </div>
+          <Notification
+            type={ 'success' }
+            message={ isSuccess.message }
+            toggle={() => this.props.hideAlert()} />
         )}
-
+        
         { isError && (
-          <div className="alert alert-danger alert-dismissible fade show" role="alert">
-            <button type="button" className="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <i className="icon-check"></i> { isError.message }        
-          </div>
+          <Notification
+            type={ 'danger' }
+            message={ isError.message }
+            toggle={() => this.props.hideAlert()} />
         )}
 
         <Row>
