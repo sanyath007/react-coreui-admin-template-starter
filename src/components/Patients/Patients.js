@@ -22,9 +22,9 @@ class Patients extends Component {
     console.log('Patients component mounted')
     this.props.fetchPatients();
 
-    setInterval(() => {
+    setTimeout(() => {
       this.props.hideAlert()
-    }, 5000)
+    }, 5000);
   }
 
   handlePaginateLink(e, link) {

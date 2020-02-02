@@ -2,7 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
-
+import PropTypes from 'prop-types';
 import {
   AppAside,
   AppFooter,
@@ -19,6 +19,7 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import { connect } from 'react-redux';
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
@@ -26,6 +27,10 @@ const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
 
+  static propTypes = {
+    isAuthenticated: PropTypes.bool.isRequired
+  };
+  
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   signOut(e) {
@@ -34,8 +39,11 @@ class DefaultLayout extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props;
+
     return (
       <div className="app">
+        { isAuthenticated && <Redirect from="/" to="/login" />}
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
             <DefaultHeader onLogout={e=>this.signOut(e)}/>
@@ -68,6 +76,7 @@ class DefaultLayout extends Component {
                         )} />
                     ) : (null);
                   })}
+                  
                   <Redirect from="/" to="/dashboard" />
                 </Switch>
               </Suspense>
@@ -89,4 +98,11 @@ class DefaultLayout extends Component {
   }
 }
 
-export default DefaultLayout;
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(DefaultLayout);
