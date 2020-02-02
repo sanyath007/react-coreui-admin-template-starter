@@ -4,16 +4,17 @@ import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fetchPatients, fetchPatient, hideAlert } from '../../redux/patients';
+import { fetchPatients, fetchPatient, deletePatient, hideAlert } from '../../redux/patients';
 
 class Patients extends Component {
   static propTypes = {
     patients: PropTypes.array.isRequired,
     pager: PropTypes.object,
     isSuccess: PropTypes.object,
-    isError: PropTypes.object,
+    isError: PropTypes.any,
     fetchPatients: PropTypes.func.isRequired,
     fetchPatient: PropTypes.func.isRequired,
+    deletePatient: PropTypes.func.isRequired,
     hideAlert: PropTypes.func.isRequired
   };
 
@@ -38,6 +39,14 @@ class Patients extends Component {
     this.props.fetchPatient(id);
 
     this.props.history.push(`/patients/edit/${id}`)
+  }
+
+  handleDelete = (e, id) => {
+    e.preventDefault();
+
+    if(window.confirm(`Are you sure to delete this patient (ID: ${id}) ?`)) {
+      this.props.deletePatient(id)
+    }
   }
 
   render() {
@@ -92,7 +101,7 @@ class Patients extends Component {
                   </thead>
                   <tbody>
                     { patients && patients.map(patient => (
-                      <tr key={patient.id}>
+                      <tr key={ patient.id+patient.hn }>
                         <td>{ patient.id }</td>
                         <td>{ patient.hn }</td>
                         <td>{ patient.pname + patient.fname + ' ' + patient.lname }</td>
@@ -100,11 +109,16 @@ class Patients extends Component {
                         <td style={{ textAlign: "center" }}>
                           <Link
                             to={`/patients/edit/${patient.id}`}
-                            onClick={(e) => this.handleEdit(e, patient.id)} 
-                            className="btn btn-warning btn-sm mr-1">
+                            className="btn btn-warning btn-sm mr-1"
+                            onClick={e => this.handleEdit(e, patient.id)}
+                          >
                             <i className="fa fa-edit"></i>
                           </Link>
-                          <Link to="/patients/delete" className="btn btn-danger btn-sm">
+                          <Link 
+                            to={`/patients/delete/${patient.id}`}
+                            className="btn btn-danger btn-sm"
+                            onClick={e => this.handleDelete(e, patient.id)}
+                          >
                             <i className="fa fa-trash-o"></i>
                           </Link> 
                         </td>
@@ -162,6 +176,7 @@ export default connect(
   {
     fetchPatients,
     fetchPatient,
+    deletePatient,
     hideAlert
   }
 )(Patients);

@@ -16,15 +16,16 @@ import {
   DELETE_PATIENT_REQUEST,
   DELETE_PATIENT_SUCCESS,
   DELETE_PATIENT_FAILED,
-  SHOW_ALERT,
   HIDE_ALERT
 } from './types';
 
 const url = 'http://mnrhweb.com/api/imc';
 
 export const fetchPatients = link => dispatch => {
-  dispatch({ type: FETCH_PATIENTS_REQUEST });
   let apiEnpoint = link || `${url}/patients`;
+
+  console.log('fetch patients')
+  dispatch({ type: FETCH_PATIENTS_REQUEST });
 
   axios.get(apiEnpoint)
     .then(res => {
@@ -73,6 +74,8 @@ export const addPatient = (patient) => dispatch => {
       type: ADD_PATIENT_SUCCESS,
       payload: res.data
     })
+  }).then(() => {
+    dispatch(fetchPatients());
   }).catch(err => {
     dispatch({ 
       type: ADD_PATIENT_FAILED,
@@ -112,10 +115,11 @@ export const updatePatient = (id, patient, history) => dispatch => {
   });
 }
 
-export const deletePatient = (patient) => dispatch => {
+export const deletePatient = (id) => dispatch => {
   dispatch({ type: DELETE_PATIENT_REQUEST });
 
-  axios.delete(`${url}/patients`, {
+  console.log(id);
+  axios.delete(`${url}/patients/${id}`, {
     headers: {
       'Content-Type': 'application/json'
     }
@@ -124,6 +128,8 @@ export const deletePatient = (patient) => dispatch => {
       type: DELETE_PATIENT_SUCCESS,
       payload: res.data
     })
+  }).then(() => {
+      dispatch(fetchPatients());
   }).catch(err => {
     dispatch({ 
       type: DELETE_PATIENT_FAILED,

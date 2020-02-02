@@ -14,8 +14,7 @@ import {
   UPDATE_PATIENT_FAILED,
   DELETE_PATIENT_REQUEST,
   DELETE_PATIENT_SUCCESS,
-  DELETE_PATIENT_FAILED,  
-  SHOW_ALERT,
+  DELETE_PATIENT_FAILED,
   HIDE_ALERT
 } from './types';
 
@@ -45,7 +44,6 @@ export default function(state = initialState, action) {
         errors: null
       };
     case FETCH_PATIENTS_FAILED:
-      console.log(payload)
       return {
         ...state,
         loading: false,
@@ -88,7 +86,7 @@ export default function(state = initialState, action) {
         ...state,
         loading: false,
         patients: [...state.patients, payload],
-        errors: '',
+        errors: null,
         success: {
           status: true,
           message: 'Added Successful !!'
@@ -120,7 +118,7 @@ export default function(state = initialState, action) {
         ...state,
         loading: false,
         patients: updatedPatient,
-        errors: '',
+        errors: null,
         success: {
           status: true,
           message: 'Updated Successful !!'
@@ -144,7 +142,7 @@ export default function(state = initialState, action) {
         ...state,
         loading: false,
         patients: [...state.patients, payload],
-        errors: '',
+        errors: null,
         success: {
           status: true,
           message: 'Deleted Successful !!'
