@@ -1,4 +1,6 @@
+import isEmpty from 'lodash/isEmpty';
 import {
+  SET_CURRENT_USER,
   AUTH_LOGIN_REQUEST,
   AUTH_LOGIN_SUCCESS,
   AUTH_LOGIN_FAILED,
@@ -7,7 +9,7 @@ import {
 } from './types';
 
 const initialState = {
-  token: localStorage.getItem('token'),
+  token: localStorage.getItem('jwtToken'),
   isAuthenticated: null,
   isLoading: false,
   user: null
@@ -17,13 +19,19 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
 
   switch(type) {
+    case SET_CURRENT_USER:
+      return {
+        ...state,
+        isAuthenticated: !isEmpty(payload),
+        user: payload
+      };
     case AUTH_LOGIN_REQUEST:
       return {
         ...state,
         isLoading: true
       };
     case AUTH_LOGIN_SUCCESS:
-      localStorage.setItem('token', JSON.stringify(payload));
+      localStorage.setItem('jwtToken', JSON.stringify(payload));
 
       return {
         ...state,
@@ -33,7 +41,7 @@ export default function(state = initialState, action) {
       };
     case AUTH_LOGIN_FAILED:
     case AUTH_LOGOUT_SUCCESS:
-      localStorage.removeItem('token');
+      localStorage.removeItem('jwtToken');
 
       return {
         ...state,

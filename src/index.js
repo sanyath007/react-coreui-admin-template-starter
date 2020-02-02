@@ -5,12 +5,24 @@ import './polyfill'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+// import jwt from 'jsonwebtoken';
 
 import store from './redux/store';
+import { setCurrentUser } from './redux/auth';
+import setAuthorization from './utils/setAuthorizationToken';
+
 import './index.css';
 import App from './App';
 
 import * as serviceWorker from './serviceWorker';
+
+if(localStorage.jwtToken) {
+  console.log('jwtToken is available');
+  const token = JSON.parse(localStorage.jwtToken);
+  
+  setAuthorization(token.access_token);
+  store.dispatch(setCurrentUser(token.user));
+}
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,6 @@
 export {
   login,
   logout,
-  hideAlert
+  hideAlert,
+  setCurrentUser
 } from './actions';

@@ -1,8 +1,9 @@
 import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Container } from 'reactstrap';
 import {
   AppAside,
   AppFooter,
@@ -19,7 +20,7 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
-import { connect } from 'react-redux';
+import { logout } from '../../redux/auth';
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
@@ -28,14 +29,18 @@ const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 class DefaultLayout extends Component {
 
   static propTypes = {
-    isAuthenticated: PropTypes.bool.isRequired
+    isAuthenticated: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired
   };
   
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   signOut(e) {
     e.preventDefault()
-    this.props.history.push('/login')
+
+    const { logout, history } = this.props;
+    
+    logout(history)
   }
 
   render() {
@@ -43,10 +48,9 @@ class DefaultLayout extends Component {
 
     return (
       <div className="app">
-        { isAuthenticated && <Redirect from="/" to="/login" />}
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
-            <DefaultHeader onLogout={e=>this.signOut(e)}/>
+            <DefaultHeader onLogout={e => this.signOut(e)}/>
           </Suspense>
         </AppHeader>
         <div className="app-body">
@@ -104,5 +108,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { logout }
 )(DefaultLayout);
