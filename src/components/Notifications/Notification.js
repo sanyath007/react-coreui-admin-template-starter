@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 class Notification extends React.Component {
   componentDidMount() {
@@ -19,7 +19,7 @@ class Notification extends React.Component {
       alertWrapperClass += ' alert alert-success';
       alertIconClass = 'icon-check';
     } else if(type === 'danger') {
-      alertWrapperClass += ' alert alert-success';
+      alertWrapperClass += ' alert alert-danger';
       alertIconClass = 'icon-close';
     }
 

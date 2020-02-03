@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { isObject, isEmpty }  from 'lodash';
 import {
   FETCH_PATIENTS_REQUEST,
   FETCH_PATIENTS_SUCCESS,
@@ -31,14 +32,26 @@ export const fetchPatients = link => dispatch => {
       dispatch({ type: SET_PAGER, payload: res.data.pager });
     })
     .catch(err => {
+      console.log(err.response);
+      console.log(!isEmpty(err.response.data.message));
       dispatch({ 
         type: FETCH_PATIENTS_FAILED,
         payload: {
           status: err.response.status,
-          message: err.response.data.message
+          message: getErrorMessage(err.response)
         }
       });
     });
+}
+
+function getErrorMessage(resData) {
+  return isObject(resData.data) 
+          ? !isEmpty(resData.data.message)
+            ? resData.data.message
+            : resData.statusText
+          : !isEmpty(resData.data)
+            ? resData.data
+            : resData.statusText;
 }
 
 export const fetchPatient = id => dispatch => {

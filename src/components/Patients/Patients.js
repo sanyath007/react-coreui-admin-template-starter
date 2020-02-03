@@ -48,7 +48,7 @@ class Patients extends Component {
 
   render() {
     const { patients, pager, isSuccess, isError } = this.props;
-    
+    console.log(isError)
     const setPageItemClass = (link) => link ? "page-item" : "page-item disabled";
     const setCurrentPageClass = (page) => page === pager.current_page ? "page-item active" : "page-item";
 
