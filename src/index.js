@@ -5,7 +5,7 @@ import './polyfill'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 import store from './redux/store';
 import { setCurrentUser } from './redux/auth';
@@ -18,10 +18,29 @@ import * as serviceWorker from './serviceWorker';
 
 if(localStorage.jwtToken) {
   console.log('jwtToken is available');
-  const token = JSON.parse(localStorage.jwtToken);
+  const { access_token: token, user } = JSON.parse(localStorage.jwtToken);
+
+  /** Option 1 comparing token.exp by Date.now */
+  // const decodedToken = jwt.decode(token);
+  // console.log(`${Date.now()} == ${decodedToken.exp}`);
   
-  setAuthorization(token.access_token);
-  store.dispatch(setCurrentUser(token.user));
+  /** Option 1 Use jwt verify function */
+  jwt.verify(token, 'puU29GeajPSk7ouhRi0fPMijbQzww5x6QUEMWRK1QVdWx6nmPKRsBi9unBXhmdoF', (err, decoded) => {
+    console.log(`err: ${err}`);
+    console.log(decoded);
+
+    if (err) {      
+      /** Set error message if token invalid */
+      // err = {
+      //   name: 'TokenExpiredError',
+      //   message: 'jwt expired',
+      //   expiredAt: decoded.exp
+      // }
+    } else {
+      setAuthorization(token);
+      store.dispatch(setCurrentUser(user));
+    }
+  });
 }
 
 ReactDOM.render(

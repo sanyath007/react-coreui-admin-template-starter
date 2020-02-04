@@ -19,7 +19,7 @@ import {
 
 import { login } from '../../../redux/auth';
 
-class Login extends Component {
+class Signin extends Component {
   constructor(props) {
     super(props);
 
@@ -61,7 +61,7 @@ class Login extends Component {
                 <Card className="p-4">
                   <CardBody>
                     <Form onSubmit={e => this.handleSubmitLogin(e)}>
-                      <h1>Login</h1>
+                      <h1>Sign In</h1>
                       <p className="text-muted">Sign In to your account</p>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -95,7 +95,7 @@ class Login extends Component {
                       </InputGroup>
                       <Row>
                         <Col xs="6">
-                          <Button color="primary" className="px-4">Login</Button>
+                          <Button color="primary" className="px-4">Sign In</Button>
                         </Col>
                         <Col xs="6" className="text-right">
                           <Button color="link" className="px-0">Forgot password?</Button>
@@ -110,8 +110,8 @@ class Login extends Component {
                       <h2>Sign up</h2>
                       <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
                         labore et dolore magna aliqua.</p>
-                      <Link to="/register">
-                        <Button color="primary" className="mt-3" active tabIndex={-1}>Register Now!</Button>
+                      <Link to="/signup">
+                        <Button color="primary" className="mt-3" active tabIndex={-1}>สร้างบัญชีผู้ใช้งาน</Button>
                       </Link>
                     </div>
                   </CardBody>
@@ -128,4 +128,4 @@ class Login extends Component {
 export default connect(
   null,
   { login }
-)(Login);
+)(Signin);

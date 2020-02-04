@@ -6,16 +6,14 @@ import {
   Row,
   Col,
   Form,
-  FormInput,
+  Input,
   FormGroup,
-  FormRadio,
-  FormSelect,
   Button
-} from "shards-react";
-import TagsInput from 'react-tagsinput';
-import Dropzone from 'react-dropzone';
+} from "reactstrap";
+// import TagsInput from 'react-tagsinput';
+// import Dropzone from 'react-dropzone';
 
-import 'react-tagsinput/react-tagsinput.css';
+// import 'react-tagsinput/react-tagsinput.css';
 
 const initialState = {
   id: '',
@@ -91,7 +89,7 @@ class NewForm extends Component {
                 <Row form>
                   <Col md="4" className="form-group">
                     <label htmlFor="pid">PID ผู้ป่วย</label>
-                    <FormInput
+                    <Input
                       id="pid"
                       name="pid"
                       type="text"
@@ -102,7 +100,7 @@ class NewForm extends Component {
                   </Col>
                   <Col md="4">
                     <label htmlFor="visitCount">ครั้งที่</label>
-                    <FormInput
+                    <Input
                       id="visitCount"
                       name="visitCount"
                       type="text"
@@ -113,7 +111,7 @@ class NewForm extends Component {
                   </Col>
                   <Col md="4" className="form-group">
                     <label htmlFor="visitDate">วันที่เยี่ยมบ้าน</label>
-                    <FormInput 
+                    <Input 
                       id="visitDate"
                       name="visitDate"
                       type="text"
@@ -127,19 +125,19 @@ class NewForm extends Component {
                 <Row form>
                   <Col md="12" className="form-group">
                     <label htmlFor="visitors">บุคลากร</label>
-                    <TagsInput
+                    {/* <TagsInput
                       id="visitors"
                       name="visitors"
                       value={this.state.visitors}
                       onChange={this.handleTagsInputChange}
-                    />
+                    /> */}
                   </Col>
                 </Row>
 
                 <Row form>
                   <Col md="4" className="form-group">
                     <label htmlFor="birthdate">Barthel Score</label>
-                    <FormInput
+                    <Input
                       id="birthdate"
                       name="birthdate"
                       type="text"
@@ -150,7 +148,8 @@ class NewForm extends Component {
                   </Col>
                   <Col md="4" className="form-group">
                     <label htmlFor="age">Impairment</label>
-                    <FormSelect
+                    <Input
+                      type="select"
                       id="sex"
                       name="sex"
                       value={this.state.sex}
@@ -162,11 +161,12 @@ class NewForm extends Component {
                       <option>Mobility problem</option>
                       <option>Cognitive and perception problem</option>
                       <option>Bowel and bladder problem</option>
-                    </FormSelect>
+                    </Input>
                   </Col>
                   <Col md="4">
                     <label htmlFor="sex">Complication</label>
-                    <FormSelect
+                    <Input
+                      type="select"
                       id="sex"
                       name="sex"
                       value={this.state.sex}
@@ -176,28 +176,28 @@ class NewForm extends Component {
                       <option>Bedsore grade (1-4)</option>
                       <option>Urinary tract infection (UTI)</option>
                       <option>Aspirate pneumonia</option>
-                    </FormSelect>
+                    </Input>
                   </Col>
                 </Row>
 
                 <Row form>
                   <Col md="6" className="form-group">
                     <label htmlFor="road">การ Rehab</label>
-                    <FormRadio defaultChecked>ได้รับการ Rehab</FormRadio>
-                    <FormRadio>ไม่ได้รับการ Rehab</FormRadio>
+                    <Input defaultChecked>ได้รับการ Rehab</Input>
+                    <Input>ไม่ได้รับการ Rehab</Input>
                   </Col>
                   <Col md="6">
                     <label htmlFor="moo">สถานะการเยี่ยม</label>
-                    <FormRadio defaultChecked>ไม่พบผู้ป่วย</FormRadio>
-                    <FormRadio>ผู้ป่วยย้ายที่อยู่</FormRadio>
-                    <FormRadio>เสียชีวิตแล้ว</FormRadio>
+                    <Input defaultChecked>ไม่พบผู้ป่วย</Input>
+                    <Input>ผู้ป่วยย้ายที่อยู่</Input>
+                    <Input>เสียชีวิตแล้ว</Input>
                   </Col>
                 </Row>
 
                 <Row form>
                   <Col md="12" className="form-group">
                     <label htmlFor="zipcode">รูปถ่าย/ไฟล์ </label>
-                    <Dropzone onDrop={this.handleDrop} multiple>
+                    {/* <Dropzone onDrop={this.handleDrop} multiple>
                       {({getRootProps, getInputProps, isDragActive}) => (
                         <div {...getRootProps()} style={{ border: '1px solid #000', minHeight: '50px', padding: '10px' }}>
                           <input {...getInputProps()} />
@@ -212,11 +212,7 @@ class NewForm extends Component {
                           </Row>
                         </div>
                       )}
-                    </Dropzone>
-
-                    
-                      
-                    
+                    </Dropzone> */}
                   </Col>
                 </Row>
                 

@@ -1,18 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const DataTable = ({ visitions }) => (
+const Registrations = ({ registrations }) => (
   <table className="table mb-0">
     <thead className="bg-light">
       <tr>
         <th scope="col" className="border-0">
           #
-        </th>
-        <th scope="col" className="border-0">
-          ครั้งที่
-        </th>
-        <th scope="col" className="border-0">
-          วันที่
         </th>
         <th scope="col" className="border-0">
           ชื่อ-สกุล
@@ -21,25 +14,28 @@ const DataTable = ({ visitions }) => (
           อายุ
         </th>
         <th scope="col" className="border-0">
-          บุคลากร
+          เลขบัตรประชาชน
         </th>
         <th scope="col" className="border-0">
-          Barthel Score
+          เบอร์ติดต่อผู้ป่วย
         </th>
         <th scope="col" className="border-0">
-          Impairment
+          วินิจฉัยโรคล่าสุด
         </th>
         <th scope="col" className="border-0">
-          Complication
+          วันที่เริ่มวินิจฉัย
         </th>
         <th scope="col" className="border-0">
-          ได้รับการ Rehab
+          รพ.แม่ข่ายที่ D/C
         </th>
         <th scope="col" className="border-0">
-          สถานะ
+          วันที่ D/C
         </th>
         <th scope="col" className="border-0">
-          File
+          PCU ที่รับดูแล
+        </th>
+        <th scope="col" className="border-0">
+          วันที่รับ Case
         </th>
         <th scope="col" className="border-0">
           Actions
@@ -47,20 +43,19 @@ const DataTable = ({ visitions }) => (
       </tr>
     </thead>
     <tbody>
-      {visitions.map(visit => (
-        <tr key={visit.id}>
-          <td>{visit.id}</td>
-          <td>{visit.visitCount}</td>
-          <td>{visit.visitDate}</td>
-          <td>{visit.name}</td>
-          <td>{visit.age}</td>
-          <td>{visit.visitors}</td>
-          <td>{visit.barthelScore}</td>
-          <td>{visit.impairment}</td>
-          <td>{visit.complication}</td>
-          <td>{visit.isRehab}</td>
-          <td>{visit.visitStatus}</td>
-          <td className="text-center"><i className="material-icons">attachment</i></td>
+      {registrations.map(regis => (
+        <tr key={regis.id}>
+          <td>{regis.id}</td>
+          <td>{regis.name}</td>
+          <td>{regis.age}</td>
+          <td>{regis.cid}</td>
+          <td>{regis.tel}</td>
+          <td>{regis.dx}</td>
+          <td>{regis.dxDate}</td>
+          <td>{regis.dchHosp}</td>
+          <td>{regis.dchDate}</td>
+          <td>{regis.pcu}</td>
+          <td>{regis.regDate}</td>
           <td className="text-center">
             <i className="material-icons">edit</i>
             <i className="material-icons">delete</i>
@@ -71,4 +66,4 @@ const DataTable = ({ visitions }) => (
   </table>
 );
 
-export default DataTable;
+export default Registrations;

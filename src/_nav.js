@@ -24,9 +24,14 @@ export default {
       icon: 'icon-people',
     },
     {
-      name: 'Typography',
-      url: '/theme/typography',
-      icon: 'icon-pencil',
+      name: 'Registrations',
+      url: '/registrations',
+      icon: 'icon-cursor',
+    },
+    {
+      name: 'Visitions',
+      url: '/visitions',
+      icon: 'icon-directions',
     },
     // {
     //   title: true,
@@ -234,13 +239,13 @@ export default {
       icon: 'icon-star',
       children: [
         {
-          name: 'Login',
-          url: '/login',
+          name: 'Signin',
+          url: '/signin',
           icon: 'icon-star',
         },
         {
-          name: 'Register',
-          url: '/register',
+          name: 'Sign Up',
+          url: '/signup',
           icon: 'icon-star',
         },
         {

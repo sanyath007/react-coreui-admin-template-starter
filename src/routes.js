@@ -41,13 +41,17 @@ const Patient = React.lazy(() => import('./components/Patients/Patient'));
 const PatientNew = React.lazy(() => import('./components/Patients/NewForm'));
 const PatientEdit = React.lazy(() => import('./components/Patients/EditForm'));
 
+const Registrations = React.lazy(() => import('./components/Registrations/Registrations'));
+const RegistrationNew = React.lazy(() => import('./components/Registrations/NewForm'));
+
+const Visitions = React.lazy(() => import('./components/Visitions/Visitions'));
+const VisitionNew = React.lazy(() => import('./components/Visitions/NewForm'));
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/theme', exact: true, name: 'Theme', component: Colors },
-  { path: '/theme/colors', name: 'Colors', component: Colors },
-  { path: '/theme/typography', name: 'Typography', component: Typography },
+ 
   { path: '/base', exact: true, name: 'Base', component: Cards },
   { path: '/base/cards', name: 'Cards', component: Cards },
   { path: '/base/forms', name: 'Forms', component: Forms },
@@ -82,12 +86,19 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', component: Modals },
   { path: '/widgets', name: 'Widgets', component: Widgets },
   { path: '/charts', name: 'Charts', component: Charts },
+
   { path: '/users', exact: true,  name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
   { path: '/patients', exact: true,  name: 'Patients', component: Patients },
   { path: '/patients/new', exact: true, name: 'Add New Patient', component: PatientNew },
   { path: '/patients/view/:id', exact: true, name: 'Patient Details', component: Patient },
   { path: '/patients/edit/:id', exact: true, name: 'Edit Patient', component: PatientEdit },
+
+  { path: '/registrations', exact: true,  name: 'Registrations', component: Registrations },
+  { path: '/registrations/new', exact: true, name: 'Add New Registrations', component: RegistrationNew },
+  
+  { path: '/visitions', exact: true,  name: 'Visitions', component: Visitions },
+  { path: '/visitions/new', exact: true, name: 'Add New Visitions', component: VisitionNew },
 ];
 
 export default routes;

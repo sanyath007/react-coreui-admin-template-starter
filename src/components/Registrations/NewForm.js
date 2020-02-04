@@ -5,17 +5,16 @@ import {
   Row,
   Col,
   Form,
-  FormInput,
-  FormSelect,
+  Input,
   Button
-} from "shards-react";
+} from "reactstrap";
 
-import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import th from 'date-fns/locale/th';
+// import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+// import th from 'date-fns/locale/th';
 
-registerLocale('th', th)
-setDefaultLocale('th');
+// registerLocale('th', th)
+// setDefaultLocale('th');
 
 const initialState = {
   id: '',
@@ -76,7 +75,7 @@ class NewForm extends Component {
                   <Col md="4" className="form-group">
                     <label htmlFor="patient">ผู้ป่วย</label>
                     <div className="input-group mb-0">
-                      <FormInput
+                      <Input
                         id="patient"
                         name="patient"
                         type="text"
@@ -102,7 +101,7 @@ class NewForm extends Component {
                   <Col md="5">
                     <label htmlFor="dx">วินิจฉัยโรคล่าสุด</label>
                     <div className="input-group mb-0">
-                      <FormInput
+                      <Input
                         id="dxDesc"
                         name="dxDesc"
                         type="text"
@@ -127,7 +126,7 @@ class NewForm extends Component {
                   </Col>
                   <Col md="3" className="form-group">
                     <label htmlFor="dxDate">วันที่เริ่มวินิจฉัย</label>
-                    {/* <FormInput 
+                    {/* <Input 
                       id="dxDate"
                       name="dxDate"
                       type="text"
@@ -135,7 +134,7 @@ class NewForm extends Component {
                       onChange={this.handleChange}
                       placeholder="วันที่เริ่มวินิจฉัย"
                     /> */}
-                    <DatePicker
+                    {/* <DatePicker
                       id="dxDate"
                       name="dxDate"
                       dateFormat="dd/MM/yyyy"
@@ -143,14 +142,15 @@ class NewForm extends Component {
                       onChange={this.handleDateChange.bind(this, 'dxDate')}
                       className="form-control"
                       placeholderText="วันที่เริ่มวินิจฉัย"
-                    />
+                    /> */}
                   </Col>
                 </Row>
 
                 <Row form>
                   <Col md="9" className="form-group">
                     <label htmlFor="dchHosp">รพ.แม่ข่ายที่ D/C</label>
-                    <FormSelect
+                    <Input
+                      type="select"
                       id="dchHosp"
                       name="dchHosp"
                       value={this.state.dchHosp}
@@ -160,7 +160,7 @@ class NewForm extends Component {
                       {this.props.hosps && this.props.hosps.map((h) => (
                         <option key={h.hospcode}>{h.name}</option>
                       ))}
-                    </FormSelect>
+                    </Input>
                   </Col>
                   <Col md="3" className="form-group">
                     <label htmlFor="dchDate">วันที่จำหน่าย</label>
@@ -172,7 +172,7 @@ class NewForm extends Component {
                       onChange={this.handleChange}
                       placeholder="วันที่ D/C"
                     /> */}
-                    <DatePicker
+                    {/* <DatePicker
                       id="dchDate"
                       name="dchDate"
                       dateFormat="dd/MM/yyyy"
@@ -180,14 +180,15 @@ class NewForm extends Component {
                       onChange={this.handleDateChange.bind(this, 'dchDate')}
                       className="form-control"
                       placeholderText="วันที่จำหน่าย"
-                    />
+                    /> */}
                   </Col>
                 </Row>
 
                 <Row form>
                   <Col md="9" className="form-group">
                     <label htmlFor="pcu">PCU ที่รับดูแล</label>
-                    <FormSelect
+                    <Input
+                      type="select"
                       id="pcu"
                       name="pcu"
                       value={this.state.pcu}
@@ -197,7 +198,7 @@ class NewForm extends Component {
                       {this.props.pcus && this.props.pcus.map((h) => (
                         <option key={h.hospcode}>{h.name}</option>
                       ))}
-                    </FormSelect>
+                    </Input>
                   </Col>
                   <Col md="3" className="form-group">
                     <label htmlFor="regDate">วันที่รับ Case</label>
@@ -209,7 +210,7 @@ class NewForm extends Component {
                       onChange={this.handleChange}
                       placeholder="วันที่รับ Case"
                     /> */}
-                    <DatePicker
+                    {/* <DatePicker
                       id="regDate"
                       name="regDate"
                       dateFormat="dd/MM/yyyy"
@@ -217,7 +218,7 @@ class NewForm extends Component {
                       onChange={this.handleDateChange.bind(this, 'regDate')}
                       className="form-control"
                       placeholderText="วันที่รับ Case"
-                    />
+                    /> */}
                   </Col>
                 </Row>
                 

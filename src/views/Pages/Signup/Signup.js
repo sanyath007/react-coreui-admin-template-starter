@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 
-class Register extends Component {
+class Signup extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -11,7 +11,7 @@ class Register extends Component {
               <Card className="mx-4">
                 <CardBody className="p-4">
                   <Form>
-                    <h1>Register</h1>
+                    <h1>Sign Up</h1>
                     <p className="text-muted">Create your account</p>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -43,10 +43,10 @@ class Register extends Component {
                       </InputGroupAddon>
                       <Input type="password" placeholder="Repeat password" autoComplete="new-password" />
                     </InputGroup>
-                    <Button color="success" block>Create Account</Button>
+                    <Button color="success" block>สร้างบัญชีผู้ใช้งาน</Button>
                   </Form>
                 </CardBody>
-                <CardFooter className="p-4">
+                {/* <CardFooter className="p-4">
                   <Row>
                     <Col xs="12" sm="6">
                       <Button className="btn-facebook mb-1" block><span>facebook</span></Button>
@@ -55,7 +55,7 @@ class Register extends Component {
                       <Button className="btn-twitter mb-1" block><span>twitter</span></Button>
                     </Col>
                   </Row>
-                </CardFooter>
+                </CardFooter> */}
               </Card>
             </Col>
           </Row>
@@ -65,4 +65,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default Signup;
