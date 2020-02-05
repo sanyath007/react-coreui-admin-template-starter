@@ -1,3 +1,3 @@
 export {
-  fetchRegistrations
+  fetchIcd10s
 } from './actions';

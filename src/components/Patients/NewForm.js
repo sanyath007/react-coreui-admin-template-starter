@@ -121,6 +121,7 @@ class NewForm extends Component {
       modal: !this.state.modal
     })
   }
+  
   render() {
     const { changwats } = this.props;
     const { filterAmphurs, filterTambons } = this.state;

@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import jwt from 'jsonwebtoken';
 
 import store from './redux/store';
-import { setCurrentUser } from './redux/auth';
+import { setCurrentUser, logout } from './redux/auth';
 import setAuthorization from './utils/setAuthorizationToken';
 
 import './index.css';
@@ -29,7 +29,8 @@ if(localStorage.jwtToken) {
     console.log(`err: ${err}`);
     console.log(decoded);
 
-    if (err) {      
+    if (err) {     
+      store.dispatch(logout()); 
       /** Set error message if token invalid */
       // err = {
       //   name: 'TokenExpiredError',

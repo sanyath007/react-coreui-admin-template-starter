@@ -1,15 +1,16 @@
 import {
-  FETCH_VISITIONS_REQUEST,
-  FETCH_VISITIONS_SUCCESS,
-  FETCH_VISITIONS_FAILED
+  FETCH_ICD10S_REQUEST,
+  FETCH_ICD10S_SUCCESS,
+  FETCH_ICD10S_FAILED,
+  SET_PAGER
 } from './types';
 
 const initialState = {
   loading: false,
   errors: null,
   success: null,
-  visitions: [],
-  visition: null,
+  icd10s: [],
+  icd10: null,
   pager: null
 };
 
@@ -17,26 +18,32 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case FETCH_VISITIONS_REQUEST:
+    case FETCH_ICD10S_REQUEST:
       return {
         ...state,
         loading: true,
       };
-        case FETCH_VISITIONS_SUCCESS:
+    case FETCH_ICD10S_SUCCESS:
       return {
         ...state,
         loading: false,
-        visitions: payload,
+        icd10s: payload,
         errors: null
       };
-    case FETCH_VISITIONS_FAILED:
+    case FETCH_ICD10S_FAILED:
       return {
         ...state,
         loading: false,
-        visitions: [],
+        icd10s: [],
         errors: payload,
         success: null
+      };
+    case SET_PAGER:
+      return {
+        ...state,
+        pager: payload
       };
     default: return state;
   }
 }
+  
