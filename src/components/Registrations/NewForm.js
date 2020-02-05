@@ -39,11 +39,11 @@ const initialState = {
   patient_name: '',
   dx: '',
   dx_desc: '',
-  dx_date: moment(new Date()).format('DD-MM-YYYY'),
+  dx_date: moment(new Date()).format('YYYY-MM-DD'),
   dch_hosp: '',
-  dch_date: moment(new Date()).format('DD-MM-YYYY'),
+  dch_date: moment(new Date()).format('YYYY-MM-DD'),
   pcu: '',
-  reg_date: moment(new Date()).format('DD-MM-YYYY'),
+  reg_date: moment(new Date()).format('YYYY-MM-DD'),
   modalPatients: false,
   modalIcd10: false
 };
@@ -260,14 +260,14 @@ class NewForm extends Component {
                       <Label htmlFor="dchHosp">รพ.แม่ข่ายที่ D/C</Label>
                       <Input
                         type="select"
-                        id="dchHosp"
-                        name="dchHosp"
-                        value={this.state.dchHosp}
+                        id="dch_hosp"
+                        name="dch_hosp"
+                        value={this.state.dch_hosp}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
                         { hosps && hosps.map((h) => (
-                          <option key={h.hospcode}>{h.name}</option>
+                          <option key={h.hospcode} value={h.hospcode}>{h.name}</option>
                         ))}
                       </Input>
                     </Col>
@@ -305,7 +305,7 @@ class NewForm extends Component {
                       >
                         <option>Choose...</option>
                         { pcus && pcus.map((h) => (
-                          <option key={h.hospcode}>{h.name}</option>
+                          <option key={h.hospcode} value={h.hospcode}>{h.name}</option>
                         ))}
                       </Input>
                     </Col>
