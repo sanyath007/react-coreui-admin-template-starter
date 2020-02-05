@@ -2,7 +2,7 @@ import {
   FETCH_ICD10S_REQUEST,
   FETCH_ICD10S_SUCCESS,
   FETCH_ICD10S_FAILED,
-  SET_PAGER
+  SET_ICD10S_PAGER
 } from './types';
 
 const initialState = {
@@ -38,7 +38,7 @@ export default function(state = initialState, action) {
         errors: payload,
         success: null
       };
-    case SET_PAGER:
+    case SET_ICD10S_PAGER:
       return {
         ...state,
         pager: payload

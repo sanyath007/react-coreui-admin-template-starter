@@ -9,6 +9,7 @@ import changwatReducer from './changwat/reducer';
 import amphurReducer from './amphur/reducer';
 import tambonReducer from './tambon/reducer';
 import icd10Reducer from './icd10/reducer';
+import hospcodeReducer from './hospcode/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   changwat: changwatReducer,
   amphur: amphurReducer,
   tambon: tambonReducer,
-  icd10: icd10Reducer
+  icd10: icd10Reducer,
+  hospcode: hospcodeReducer
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

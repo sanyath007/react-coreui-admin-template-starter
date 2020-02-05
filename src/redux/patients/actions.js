@@ -4,7 +4,7 @@ import {
   FETCH_PATIENTS_REQUEST,
   FETCH_PATIENTS_SUCCESS,
   FETCH_PATIENTS_FAILED,
-  SET_PAGER,
+  SET_PATIENTS_PAGER,
   FETCH_PATIENT_REQUEST,
   FETCH_PATIENT_SUCCESS,
   FETCH_PATIENT_FAILED,
@@ -29,7 +29,7 @@ export const fetchPatients = link => dispatch => {
   axios.get(apiEnpoint)
     .then(res => {
       dispatch({ type: FETCH_PATIENTS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_PAGER, payload: res.data.pager });
+      dispatch({ type: SET_PATIENTS_PAGER, payload: res.data.pager });
     })
     .catch(err => {
       console.log(err.response);

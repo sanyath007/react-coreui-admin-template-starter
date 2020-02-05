@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { fetchPatients, fetchPatient, deletePatient, hideAlert } from '../../redux/patients';
 
 import Notification from './../Notifications/Notification';
+import Pagination from '../Paginations/Pagination';
 
 class Patients extends Component {
   static propTypes = {
@@ -24,7 +25,7 @@ class Patients extends Component {
     this.props.fetchPatients();
   }
 
-  handlePaginateLink(e, link) {
+  handlePaginateLink = (e, link) => {
     e.preventDefault();
     
     this.props.fetchPatients(link);
@@ -49,8 +50,6 @@ class Patients extends Component {
   render() {
     const { patients, pager, isSuccess, isError } = this.props;
     console.log(isError)
-    const setPageItemClass = (link) => link ? "page-item" : "page-item disabled";
-    const setCurrentPageClass = (page) => page === pager.current_page ? "page-item active" : "page-item";
 
     return (
       <div className="animated fadeIn">
@@ -125,32 +124,7 @@ class Patients extends Component {
                 </Table>
                 
                 { pager && (
-                  <nav aria-label="..." className="float-right">
-                    <ul className="pagination">
-                      <li className={setPageItemClass(pager.prev_page_url)}>
-                        <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.prev_page_url)}>Previous</a>
-                      </li>
-
-                      { Array.from({ length: pager.last_page}, (val, key) => (
-                        <li className={setCurrentPageClass(key+1)} aria-current="page" key={key+1}>
-                          <a 
-                            className="page-link" 
-                            href="#"
-                            onClick={e => this.handlePaginateLink(e, `${pager.path}?page=${key+1}`)}
-                          >
-                              {key+1} <span className="sr-only">(current)</span>
-                          </a>
-                        </li>                    
-                      ))}
-
-                      <li className={setPageItemClass(pager.next_page_url)}>
-                        <a 
-                          href="#"
-                          className="page-link"
-                          onClick={e => this.handlePaginateLink(e, pager.next_page_url)}>Next</a>
-                      </li>
-                    </ul>
-                  </nav>
+                  <Pagination pager={pager} onPaginateLink={this.handlePaginateLink} />
                 )}
               </CardBody>
             </Card>

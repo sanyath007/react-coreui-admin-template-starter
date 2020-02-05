@@ -2,7 +2,7 @@ import {
   FETCH_PATIENTS_REQUEST,
   FETCH_PATIENTS_SUCCESS,
   FETCH_PATIENTS_FAILED,
-  SET_PAGER,
+  SET_PATIENTS_PAGER,
   FETCH_PATIENT_REQUEST,
   FETCH_PATIENT_SUCCESS,
   FETCH_PATIENT_FAILED,
@@ -51,7 +51,7 @@ export default function(state = initialState, action) {
         errors: payload,
         success: null
       };
-    case SET_PAGER:
+    case SET_PATIENTS_PAGER:
       return {
         ...state,
         pager: payload

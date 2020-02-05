@@ -2,7 +2,7 @@ import {
   FETCH_REGISTRATIONS_REQUEST,
   FETCH_REGISTRATIONS_SUCCESS,
   FETCH_REGISTRATIONS_FAILED,
-  SET_PAGER
+  SET_REGISTRATIONS_PAGER
 } from './types';
 
 const initialState = {
@@ -38,7 +38,7 @@ export default function(state = initialState, action) {
         errors: payload,
         success: null
       };
-    case SET_PAGER:
+    case SET_REGISTRATIONS_PAGER:
       return {
         ...state,
         pager: payload

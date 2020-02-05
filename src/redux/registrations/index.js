@@ -1,3 +1,4 @@
 export {
-  fetchRegistrations
+  fetchRegistrations,
+  addRegistration
 } from './actions';

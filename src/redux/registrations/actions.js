@@ -3,7 +3,7 @@ import {
   FETCH_REGISTRATIONS_REQUEST,
   FETCH_REGISTRATIONS_SUCCESS,
   FETCH_REGISTRATIONS_FAILED,
-  SET_PAGER
+  SET_REGISTRATIONS_PAGER
 } from './types';
 
 export const fetchRegistrations = () => dispatch => {
@@ -14,10 +14,14 @@ export const fetchRegistrations = () => dispatch => {
       console.log(res.data);
       
       dispatch({ type: FETCH_REGISTRATIONS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_PAGER, payload: res.data.pager });
+      dispatch({ type: SET_REGISTRATIONS_PAGER, payload: res.data.pager });
       
     })
     .catch(err => {
       console.log(err.response);
     })
+  }
+  
+export const addRegistration = (data) => dispatch => {
+  console.log(data);    
 }
