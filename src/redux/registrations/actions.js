@@ -6,10 +6,12 @@ import {
   SET_REGISTRATIONS_PAGER
 } from './types';
 
-export const fetchRegistrations = () => dispatch => {
+export const fetchRegistrations = link => dispatch => {
+  let apiEnpoint = link || `/api/imc/registrations`;
+
   dispatch({ type: FETCH_REGISTRATIONS_REQUEST });
   
-  axios.get('/api/imc/registrations')
+  axios.get(apiEnpoint)
     .then(res => {
       console.log(res.data);
       
@@ -20,7 +22,7 @@ export const fetchRegistrations = () => dispatch => {
     .catch(err => {
       console.log(err.response);
     })
-  }
+}
   
 export const addRegistration = (data) => dispatch => {
   console.log(data);    

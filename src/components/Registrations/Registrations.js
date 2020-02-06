@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import { fetchRegistrations } from '../../redux/registrations';
+
+import Pagination from '../Paginations/Pagination';
 
 class Registrations extends Component {
   static propTypes = {
@@ -16,6 +19,12 @@ class Registrations extends Component {
     this.props.fetchRegistrations()
   }
 
+  handlePaginateLink = (e, link) => {
+    e.preventDefault();
+    
+    this.props.fetchPatients(link);
+  }
+  
   render() {
     const { registrations, pager } = this.props;
     
@@ -28,7 +37,7 @@ class Registrations extends Component {
           <Col xs="12" md="12" sm="6">
             <Card>
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Patients <small className="text-muted">example</small>
+                <i className="fa fa-align-justify"></i> Registrations <small className="text-muted">example</small>
                 <Link to="/registrations/new" className="btn btn-primary btn-sm float-right">
                   <i className="fa fa-user-plus"></i> เพิ่ม
                 </Link>
@@ -94,32 +103,7 @@ class Registrations extends Component {
                 </Table>
                 
                 { pager && (
-                  <nav aria-label="..." className="float-right">
-                    <ul className="pagination">
-                      <li className={setPageItemClass(pager.prev_page_url)}>
-                        <a className="page-link" href="#" onClick={e => this.handlePaginateLink(e, pager.prev_page_url)}>Previous</a>
-                      </li>
-
-                      { Array.from({ length: pager.last_page}, (val, key) => (
-                        <li className={setCurrentPageClass(key+1)} aria-current="page" key={key+1}>
-                          <a 
-                            className="page-link" 
-                            href="#"
-                            onClick={e => this.handlePaginateLink(e, `${pager.path}?page=${key+1}`)}
-                          >
-                              {key+1} <span className="sr-only">(current)</span>
-                          </a>
-                        </li>                    
-                      ))}
-
-                      <li className={setPageItemClass(pager.next_page_url)}>
-                        <a 
-                          href="#"
-                          className="page-link"
-                          onClick={e => this.handlePaginateLink(e, pager.next_page_url)}>Next</a>
-                      </li>
-                    </ul>
-                  </nav>
+                  <Pagination pager={pager} onPaginateLink={this.handlePaginateLink} />
                 )}
               </CardBody>
             </Card>

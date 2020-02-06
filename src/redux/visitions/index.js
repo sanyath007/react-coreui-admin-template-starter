@@ -1,5 +1,3 @@
-import { fetchChangwat } from './actions';
-
 export {
-  fetchChangwat
-};
+  fetchVisitions
+} from './actions';
