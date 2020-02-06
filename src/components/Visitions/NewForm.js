@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
   Button,
   Card,
@@ -20,13 +22,14 @@ import Dropzone from 'react-dropzone';
 import 'react-tagsinput/react-tagsinput.css';
 
 import ModalPatients from '../Modals/ModalPatients';
+import { addVisition } from '../../redux/visitions';
 
 const initialState = {
   id: '',
   pid: '',
   patient_name: '',
   visit_count: 0,
-  visit_date: '',
+  visit_date: moment(Date.now()).format('YYYY-MM-DD'),
   visitors: [],
   barthel_score: 0,
   impairment: '',
@@ -37,13 +40,12 @@ const initialState = {
   modal: false,
 };
 
-const boxStyle = { 
-  border: '1px solid #000',
-  borderRadius: '2px', 
-  backgroundColor: '#E6E6E6',
-  height: '100px',
-  padding: '5px'
-};
+const fileBoxStyle = {
+  border: '1px solid #e4e7ea',
+  borderRadius: '2px',
+  minHeight: '50px',
+  padding: '10px'
+}
 
 const thumbnailStyle = {
   width: '120px',
@@ -62,15 +64,28 @@ class NewForm extends Component {
     this.handleDrop = this.handleDrop.bind(this);
   }
 
-  handleChange (event) {
-    const name = event.target.name;
-    const value = event.target.value;
+  static propTypes = {
+    addVisition: PropTypes.func.isRequired
+  };
+
+  handleChange (e) {
+    const { name, value } = e.target;
 
     this.setState({
       [name]: value
     });
   }
   
+  handleSubmit(e) {
+    e.preventDefault();
+    
+    const { modal, patient_name, ...visition} = this.state;
+    
+    this.props.addVisition(visition);
+
+    this.setState( this.initialState);
+  }
+    
   toggleModal = () => {
     this.setState({
       modal: !this.state.modal
@@ -81,22 +96,12 @@ class NewForm extends Component {
     this.setState({ visitors: tags });
   }
   
-  handleSubmit (event) {
-    event.preventDefault();
-    
-    console.log(this.state);
-    
-    // this.props.onSubmit(this.state);
-    this.setState({ ...initialState });
-  }
-  
   handleDrop (acceptedFiles) {
     this.setState({ 
       attachments: this.state.attachments.concat(acceptedFiles) });
   }
 
   handleModalSelected = (e, obj) => {
-    console.log(obj)
       this.setState({
         pid: obj.pid,
         patient_name: obj.pname + obj.fname + ' ' + obj.lname,
@@ -150,15 +155,16 @@ class NewForm extends Component {
                         value={this.state.patient_name}
                         onChange={this.handleChange}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
+                        readOnly
                       />
                     </Col>
                     <Col md="6">
                       <Label htmlFor="visitCount">ครั้งที่</Label>
                       <Input
-                        id="visitCount"
-                        name="visitCount"
+                        id="visit_count"
+                        name="visit_count"
                         type="text"
-                        value={this.state.visitCount}
+                        value={this.state.visit_count}
                         onChange={this.handleChange}
                         placeholder="ครั้งที่"
                       />
@@ -166,10 +172,10 @@ class NewForm extends Component {
                     <Col md="6" className="form-group">
                       <Label htmlFor="visitDate">วันที่เยี่ยมบ้าน</Label>
                       <Input 
-                        id="visitDate"
-                        name="visitDate"
+                        id="visit_date"
+                        name="visit_date"
                         type="text"
-                        value={this.state.visitDate}
+                        value={this.state.visit_date}
                         onChange={this.handleChange}
                         placeholder="วันที่เยี่ยมบ้าน"
                       />
@@ -190,12 +196,12 @@ class NewForm extends Component {
 
                   <Row form>
                     <Col md="4" className="form-group">
-                      <Label htmlFor="birthdate">Barthel Score</Label>
+                      <Label htmlFor="barthelScore">Barthel Score</Label>
                       <Input
-                        id="birthdate"
-                        name="birthdate"
+                        id="barthel_score"
+                        name="barthel_score"
                         type="text"
-                        value={this.state.birthdate}
+                        value={this.state.barthel_score}
                         onChange={this.handleChange}
                         placeholder="Barthel Score"
                       />
@@ -209,12 +215,12 @@ class NewForm extends Component {
                         value={this.state.impairment}
                         onChange={this.handleChange}
                       >
-                        <option>Choose...</option>
-                        <option>Swallowing problem</option>
-                        <option>Communication problem</option>
-                        <option>Mobility problem</option>
-                        <option>Cognitive and perception problem</option>
-                        <option>Bowel and bladder problem</option>
+                        <option value="">Choose...</option>
+                        <option value="1">Swallowing problem</option>
+                        <option value="2">Communication problem</option>
+                        <option value="3">Mobility problem</option>
+                        <option value="4">Cognitive and perception problem</option>
+                        <option value="5">Bowel and bladder problem</option>
                       </Input>
                     </Col>
                     <Col md="4">
@@ -226,10 +232,10 @@ class NewForm extends Component {
                         value={this.state.complication}
                         onChange={this.handleChange}
                       >
-                        <option>Choose...</option>
-                        <option>Bedsore grade (1-4)</option>
-                        <option>Urinary tract infection (UTI)</option>
-                        <option>Aspirate pneumonia</option>
+                        <option value="">Choose...</option>
+                        <option value="1">Bedsore grade (1-4)</option>
+                        <option value="2">Urinary tract infection (UTI)</option>
+                        <option value="3">Aspirate pneumonia</option>
                       </Input>
                     </Col>
                   </Row>
@@ -270,17 +276,17 @@ class NewForm extends Component {
 
                   <Row form>
                     <Col md="12" className="form-group">
-                      <Label htmlFor="zipcode">รูปถ่าย/ไฟล์ </Label>
+                      <Label htmlFor="attachments">รูปถ่าย/ไฟล์ </Label>
                       <Dropzone onDrop={this.handleDrop} multiple>
                         {({getRootProps, getInputProps, isDragActive}) => (
-                          <div {...getRootProps()} style={{ border: '1px solid #000', minHeight: '50px', padding: '10px' }}>
+                          <div {...getRootProps()} style={fileBoxStyle}>
                             <input {...getInputProps()} />
                             {isDragActive ? `Drop it like it's Hot!` : 'Click me or drag a file to upload!'}
 
                             <Row form>
                               { this.state.attachments.length > 0 && this.state.attachments.map(file => (
                                 <Col md="3" key={file.name}>
-                                  <img src={URL.createObjectURL(file)} style={ thumbnailStyle } alt=""/> {file.name}
+                                  <img src={URL.createObjectURL(file)} style={ thumbnailStyle } alt="" /> {file.name}
                                 </Col>
                               ))}
                             </Row>
@@ -310,4 +316,7 @@ class NewForm extends Component {
   }
 }
 
-export default NewForm;
+export default connect(
+  null,
+  { addVisition }
+)(NewForm);

@@ -1,3 +1,4 @@
 export {
-  fetchVisitions
+  fetchVisitions,
+  addVisition
 } from './actions';

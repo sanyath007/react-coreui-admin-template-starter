@@ -51,7 +51,7 @@ class Visitions extends Component {
                       <th scope="col">ชื่อ-สกุล</th>
                       <th scope="col" className="text-center">อายุ</th>
                       {/* <th scope="col">บุคลากร</th> */}
-                      <th scope="col" className="text-center">Barthel Score</th>
+                      <th scope="col" className="text-center">Barthel</th>
                       {/* <th scope="col">Impairment</th>
                       <th scope="col">Complication</th>
                       <th scope="col">ได้รับการ Rehab</th> */}
@@ -61,9 +61,9 @@ class Visitions extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {visitions.map(visit => (
-                      <tr key={visit.id}>
-                        <td className="text-center">{visit.id}</td>
+                    {visitions.map((visit, index) => (
+                      <tr key={visit.id+visit.visit_count}>
+                        <td className="text-center">{index+1}</td>
                         <td className="text-center">{visit.visit_count}</td>
                         <td className="text-center">{visit.visit_date}</td>
                         <td>{visit.pname + visit.fname + ' ' + visit.lname}</td>

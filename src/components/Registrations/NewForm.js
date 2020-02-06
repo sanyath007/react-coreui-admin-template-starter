@@ -174,6 +174,7 @@ class NewForm extends Component {
                         value={this.state.patient_name}
                         onChange={this.handleChange}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
+                        readOnly
                       />
                     </Col>
                     <Col md="3" className="form-group">
@@ -231,6 +232,7 @@ class NewForm extends Component {
                         value={this.state.dx_desc}
                         onChange={this.handleChange}
                         placeholder="วินิจฉัยโรค"
+                        readOnly
                       />
                     </Col>
                   </Row>
