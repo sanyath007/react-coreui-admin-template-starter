@@ -1,0 +1,1 @@
+export const MY_ACTIONS_TYPE = 'MY_ACTIONS_TYPE';

@@ -1,10 +1,8 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import patienReducer from './patients/reducer';
-
 const rootReducer = combineReducers({
-  patient: patienReducer
+  // my reducers...
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

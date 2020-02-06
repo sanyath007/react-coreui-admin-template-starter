@@ -9,15 +9,15 @@ export default {
         text: 'NEW',
       },
     },
-    // {
-    //   title: true,
-    //   name: 'Theme',
-    //   wrapper: {            // optional wrapper object
-    //     element: '',        // required valid HTML5 element tag
-    //     attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-    //   },
-    //   class: ''             // optional class names space delimited list for title item ex: "text-center"
-    // },
+    {
+      title: true,
+      name: 'Theme',
+      wrapper: {            // optional wrapper object
+        element: '',        // required valid HTML5 element tag
+        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      },
+      class: ''             // optional class names space delimited list for title item ex: "text-center"
+    },
     {
       name: 'Patients',
       url: '/patients',
@@ -28,14 +28,14 @@ export default {
       url: '/theme/typography',
       icon: 'icon-pencil',
     },
-    // {
-    //   title: true,
-    //   name: 'Components',
-    //   wrapper: {
-    //     element: '',
-    //     attributes: {},
-    //   },
-    // },
+    {
+      title: true,
+      name: 'Components',
+      wrapper: {
+        element: '',
+        attributes: {},
+      },
+    },
     {
       name: 'Base',
       url: '/base',
@@ -224,10 +224,10 @@ export default {
     {
       divider: true,
     },
-    // {
-    //   title: true,
-    //   name: 'Extras',
-    // },
+    {
+      title: true,
+      name: 'Extras',
+    },
     {
       name: 'Pages',
       url: '/pages',
