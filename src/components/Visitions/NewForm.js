@@ -14,10 +14,12 @@ import {
   Label,
   Row,
 } from "reactstrap";
-// import TagsInput from 'react-tagsinput';
-// import Dropzone from 'react-dropzone';
+import TagsInput from 'react-tagsinput';
+import Dropzone from 'react-dropzone';
 
-// import 'react-tagsinput/react-tagsinput.css';
+import 'react-tagsinput/react-tagsinput.css';
+
+import ModalPatients from '../Modals/ModalPatients';
 
 const initialState = {
   id: '',
@@ -29,9 +31,10 @@ const initialState = {
   barthel_score: 0,
   impairment: '',
   complication: '',
-  isRehab: false,
-  visit_status: 0,
-  attachments: []
+  is_rehab: '',
+  visit_status: '',
+  attachments: [],
+  modal: false,
 };
 
 const boxStyle = { 
@@ -68,6 +71,12 @@ class NewForm extends Component {
     });
   }
   
+  toggleModal = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
   handleTagsInputChange (tags) {
     this.setState({ visitors: tags });
   }
@@ -84,6 +93,15 @@ class NewForm extends Component {
   handleDrop (acceptedFiles) {
     this.setState({ 
       attachments: this.state.attachments.concat(acceptedFiles) });
+  }
+
+  handleModalSelected = (e, obj) => {
+    console.log(obj)
+      this.setState({
+        pid: obj.pid,
+        patient_name: obj.pname + obj.fname + ' ' + obj.lname,
+        modal: !this.state.modal
+      });
   }
 
   render () {
@@ -116,7 +134,7 @@ class NewForm extends Component {
                             className="btn btn-outline-secondary" 
                             type="button" 
                             id="button-addon1" 
-                            onClick={this.togglePatients}
+                            onClick={this.toggleModal}
                           >
                             <i className="material-icons">search</i>
                           </button>
@@ -161,35 +179,12 @@ class NewForm extends Component {
                   <Row form>
                     <Col md="12" className="form-group">
                       <Label htmlFor="visitors">บุคลากร</Label>
-                      <div className="input-group mb-0">
-                        <Input
-                          id="visitors"
-                          name="visitors"
-                          type="text"
-                          value={this.state.visitors}
-                          onChange={this.handleChange}
-                          placeholder="บุคลากร"
-                        />
-                        <div className="input-group-append">
-                          <button 
-                            className="btn btn-outline-secondary" 
-                            type="button" 
-                            id="button-addon1" 
-                            onClick={this.togglePatients}
-                          >
-                            <i className="material-icons">search</i>
-                          </button>
-                        </div>
-                      </div>
-                      <div className="mt-2 p-2" style={boxStyle}>
-                      <FormText color="muted">Visitors list here...</FormText>
-                      </div>
-                      {/* <TagsInput
+                      <TagsInput
                         id="visitors"
                         name="visitors"
                         value={this.state.visitors}
                         onChange={this.handleTagsInputChange}
-                      /> */}
+                      />
                     </Col>
                   </Row>
 
@@ -209,9 +204,9 @@ class NewForm extends Component {
                       <Label htmlFor="age">Impairment</Label>
                       <Input
                         type="select"
-                        id="sex"
-                        name="sex"
-                        value={this.state.sex}
+                        id="impairment"
+                        name="impairment"
+                        value={this.state.impairment}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -226,9 +221,9 @@ class NewForm extends Component {
                       <Label htmlFor="sex">Complication</Label>
                       <Input
                         type="select"
-                        id="sex"
-                        name="sex"
-                        value={this.state.sex}
+                        id="complication"
+                        name="complication"
+                        value={this.state.complication}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -244,12 +239,12 @@ class NewForm extends Component {
                       <Label htmlFor="road">การ Rehab</Label>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="radio1" />{' '}ได้รับการ Rehab
+                          <Input type="radio" name="is_rehab" value="1" onChange={this.handleChange} />{' '}ได้รับการ Rehab
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="radio1" />{' '}ไม่ได้รับการ Rehab
+                          <Input type="radio" name="is_rehab" value="0" onChange={this.handleChange} />{' '}ไม่ได้รับการ Rehab
                         </Label>
                       </FormGroup>
                     </Col>
@@ -257,17 +252,17 @@ class NewForm extends Component {
                       <Label htmlFor="moo">สถานะการเยี่ยม</Label>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="radio1" />{' '}ไม่พบผู้ป่วย
+                          <Input type="radio" name="visit_status" value="0" onChange={this.handleChange} />{' '}ไม่พบผู้ป่วย
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="radio1" />{' '}ผู้ป่วยย้ายที่อยู่
+                          <Input type="radio" name="visit_status" value="1" onChange={this.handleChange} />{' '}ผู้ป่วยย้ายที่อยู่
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="radio1" />{' '}เสียชีวิตแล้ว
+                          <Input type="radio" name="visit_status" value="2" onChange={this.handleChange} />{' '}เสียชีวิตแล้ว
                         </Label>
                       </FormGroup>
                     </Col>
@@ -276,8 +271,7 @@ class NewForm extends Component {
                   <Row form>
                     <Col md="12" className="form-group">
                       <Label htmlFor="zipcode">รูปถ่าย/ไฟล์ </Label>
-                      <Input type="file" />
-                      {/* <Dropzone onDrop={this.handleDrop} multiple>
+                      <Dropzone onDrop={this.handleDrop} multiple>
                         {({getRootProps, getInputProps, isDragActive}) => (
                           <div {...getRootProps()} style={{ border: '1px solid #000', minHeight: '50px', padding: '10px' }}>
                             <input {...getInputProps()} />
@@ -292,7 +286,7 @@ class NewForm extends Component {
                             </Row>
                           </div>
                         )}
-                      </Dropzone> */}
+                      </Dropzone>
                     </Col>
                   </Row>
           
@@ -304,6 +298,11 @@ class NewForm extends Component {
                 </CardFooter>
               </Form>
             </Card>
+
+            <ModalPatients 
+              modal={this.state.modal} 
+              toggle={() => this.toggleModal} 
+              onModalSelected={this.handleModalSelected} />
           </Col>
         </Row>
       </div>

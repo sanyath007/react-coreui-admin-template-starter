@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 
 import store from './redux/store';
 import { setCurrentUser, logout } from './redux/auth';
@@ -15,6 +16,16 @@ import './index.css';
 import App from './App';
 
 import * as serviceWorker from './serviceWorker';
+
+console.log(process.env.NODE_ENV);
+
+// if(process.env.NODE_ENV === 'development') {
+//   axios.defaults.baseURL = 'http://mnrhweb.com'
+// }
+
+if(process.env.NODE_ENV === 'production') {
+  axios.defaults.baseURL = 'http://mnrhweb.com'
+}
 
 if(localStorage.jwtToken) {
   console.log('jwtToken is available');

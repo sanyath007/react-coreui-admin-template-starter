@@ -20,12 +20,11 @@ import {
 } from 'reactstrap';
 import moment from 'moment';
 
-import { fetchPatients } from '../../redux/patients';
-import { fetchIcd10s } from '../../redux/icd10';
 import { fetchHosps, fetchPcus } from '../../redux/hospcode';
 import { addRegistration } from '../../redux/registrations';
 
-import Pagination from '../Paginations/Pagination';
+import ModalPatients from '../Modals/ModalPatients';
+import ModalICD10s from '../Modals/ModalICD10s';
 // import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 // import 'react-datepicker/dist/react-datepicker.css';
 // import th from 'date-fns/locale/th';
@@ -62,20 +61,12 @@ class NewForm extends Component {
   }
 
   static propType = {
-    patients: PropTypes.array.isRequired,
-    pagerPatients: PropTypes.object.isRequired,
-    icd10s: PropTypes.array.isRequired,
-    pagerIcd10s: PropTypes.object.isRequired,
-    fetchPatients: PropTypes.func.isRequired,
-    fetchIcd10s: PropTypes.func.isRequired,
     fetchHosps: PropTypes.func.isRequired,
     fetchPcus: PropTypes.func.isRequired,
     addRegistration: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    this.props.fetchPatients();
-    this.props.fetchIcd10s();
     this.props.fetchHosps();
     this.props.fetchPcus();
   }
@@ -119,7 +110,7 @@ class NewForm extends Component {
     // this.setState({ ...initialState });
   }
 
-  onModalSelect = (e, obj) => {
+  handleModalSelected = (e, obj) => {
     console.log(obj)
     if(this.state.modalPatients) {
       this.setState({
@@ -133,17 +124,6 @@ class NewForm extends Component {
         dx_desc: obj.name,
         modalIcd10: !this.state.modalIcd10
       })
-    }
-  }
-
-  handlePaginateLink = (e, url) => {
-    e.preventDefault();
-
-    console.log(url)
-    if(this.state.modalPatients) {
-      this.props.fetchPatients(url);
-    } else {
-      this.props.fetchIcd10s(url);
     }
   }
 
@@ -339,95 +319,15 @@ class NewForm extends Component {
               </Form>
             </Card>
             
-            {/* #========= Patients Modal =========# */}
-            <Modal
-              isOpen={this.state.modalPatients}
-              toggle={this.togglePatients}
-              size="lg"
-              id="modal-patients"
-              className={this.props.className}
-            >
-              <ModalHeader toggle={this.togglePatients}>เลือกผู้ป่วย</ModalHeader>
-              <ModalBody>
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>PID</th>
-                      <th>CID</th>
-                      <th>ชื่อ-สกุล</th>
-                      <th>อายุ</th>
-                      <th>เลือก</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { this.props.patients && this.props.patients.map(patient => (
-                      <tr key={patient.id+patient.hn}>
-                        <td>{patient.id}</td>
-                        <td>{patient.pid}</td>
-                        <td>{patient.cid}</td>
-                        <td>{patient.pname + patient.fname + ' ' + patient.lname}</td>
-                        <td>{patient.age_y}</td>
-                        <td>
-                          <button className="btn btn-success" onClick={(e) => this.onModalSelect(e, patient)}>
-                            เลือก
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
+            <ModalPatients 
+              modal={this.state.modalPatients} 
+              toggle={this.togglePatients} 
+              onModalSelected={this.handleModalSelected} />
 
-                { pagerPatients && (
-                  <Pagination pager={pagerPatients} onPaginateLink={this.handlePaginateLink} />
-                )}
-              </ModalBody>
-            </Modal>
-
-            {/* #========= ICD10 Modal =========# */}
-            <Modal
-              isOpen={this.state.modalIcd10}
-              toggle={this.toggleIcd10}
-              size="lg"
-              id="modal-icd10s"
-              className={this.props.className}
-            >
-              <ModalHeader toggle={this.toggleIcd10}>เลือก ICD10</ModalHeader>
-              <ModalBody>
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>ICD10</th>
-                      <th>Description</th>
-                      <th>Remark</th>
-                      <th>เลือก</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    { this.props.icd10s && this.props.icd10s.map((icd10, index) => {
-                      return (
-                        <tr key={icd10.code}>
-                          <td>{index + 1}</td>
-                          <td>{icd10.code}</td>
-                          <td>{icd10.name}</td>
-                          <td>{icd10.tname}</td>
-                          <td>
-                            <button className="btn btn-success" onClick={(e) => this.onModalSelect(e, icd10)}>
-                              เลือก
-                            </button>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </Table>
-
-                { pagerIcd10s && (
-                  <Pagination pager={pagerIcd10s} onPaginateLink={this.handlePaginateLink} />
-                )}
-              </ModalBody>
-            </Modal>
+            <ModalICD10s 
+              modal={this.state.modalIcd10} 
+              toggle={this.toggleIcd10} 
+              onModalSelected={this.handleModalSelected} />
 
           </Col>
         </Row>
@@ -437,15 +337,11 @@ class NewForm extends Component {
 }
 
 const mapStateToProps = state => ({
-  patients: state.patient.patients,
-  pagerPatients: state.patient.pager,
-  icd10s: state.icd10.icd10s,
-  pagerIcd10s: state.icd10.pager,
   hosps: state.hospcode.hosps,
   pcus: state.hospcode.pcus
 });
 
 export default connect(
   mapStateToProps,
-  { fetchPatients, fetchIcd10s, fetchHosps, fetchPcus, addRegistration }
+  { fetchHosps, fetchPcus, addRegistration }
 )(NewForm);
