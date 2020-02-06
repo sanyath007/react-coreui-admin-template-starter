@@ -69,7 +69,7 @@ class Registrations extends Component {
                   </thead>
                   <tbody>
                     {registrations.map(regis => (
-                      <tr key={regis.id}>
+                      <tr key={regis.id+regis.pid}>
                         <td>{regis.id}</td>
                         <td>{regis.pname + regis.fname + ' ' + regis.lname}</td>
                         <td>{regis.age_y}</td>

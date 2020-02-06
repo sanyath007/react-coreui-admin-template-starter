@@ -25,12 +25,13 @@ import { addRegistration } from '../../redux/registrations';
 
 import ModalPatients from '../Modals/ModalPatients';
 import ModalICD10s from '../Modals/ModalICD10s';
-// import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
-// import th from 'date-fns/locale/th';
 
-// registerLocale('th', th)
-// setDefaultLocale('th');
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import th from 'date-fns/locale/th';
+
+registerLocale('th', th)
+setDefaultLocale('th');
 
 const initialState = {
   id: '',
@@ -38,11 +39,12 @@ const initialState = {
   patient_name: '',
   dx: '',
   dx_desc: '',
-  dx_date: moment(new Date()).format('YYYY-MM-DD'),
+  dx_date: '',
   dch_hosp: '',
-  dch_date: moment(new Date()).format('YYYY-MM-DD'),
+  dch_date: '',
   pcu: '',
-  reg_date: moment(new Date()).format('YYYY-MM-DD'),
+  reg_date: '',
+  reg_status: '',
   modalPatients: false,
   modalIcd10: false
 };
@@ -54,8 +56,8 @@ class NewForm extends Component {
     this.state = initialState;
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     // this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.togglePatients = this.togglePatients.bind(this);
     this.toggleIcd10 = this.toggleIcd10.bind(this);
   }
@@ -83,7 +85,7 @@ class NewForm extends Component {
     })
   }
 
-  handleChange (e) {
+  handleChange(e) {
     const { name, value } = e.target;
 
     this.setState({
@@ -91,23 +93,18 @@ class NewForm extends Component {
     });
   }
 
-  handleDateChange (name, date) {
-    this.setState((state) => {
-      return {
-        ...state,
-        [name]: date
-      };
-    })
+  handleDateChange = (name, date) => {
+    this.setState({ [name]: date });
   }
   
-  handleSubmit (event) {
+  handleSubmit(event) {
     event.preventDefault();
     
     const { id, patient_name, dx_desc, modalIcd10, modalPatients, ...registration } = this.state;
 
     this.props.addRegistration(registration);
 
-    // this.setState({ ...initialState });
+    this.setState(initialState);
   }
 
   handleModalSelected = (e, obj) => {
@@ -179,23 +176,23 @@ class NewForm extends Component {
                     </Col>
                     <Col md="3" className="form-group">
                       <Label htmlFor="dxDate">วันที่เริ่มวินิจฉัย</Label>
-                      <Input 
+                      {/* <Input 
                         id="dx_date"
                         name="dx_date"
                         type="text"
                         value={this.state.dx_date}
                         onChange={this.handleChange}
                         placeholder="วันที่เริ่มวินิจฉัย"
-                      />
-                      {/* <DatePicker
-                        id="dxDate"
-                        name="dxDate"
-                        dateFormat="dd/MM/yyyy"
-                        selected={this.state.dxDate}
-                        onChange={this.handleDateChange.bind(this, 'dxDate')}
+                      /> */}
+                      <DatePicker
+                        id="dx_date"
+                        name="dx_date"
+                        dateFormat="yyyy-MM-dd"
+                        selected={this.state.dx_date}
+                        onChange={e => this.handleDateChange('dx_date', e)}
                         className="form-control"
                         placeholderText="วันที่เริ่มวินิจฉัย"
-                      /> */}
+                      />
                     </Col>
                   </Row>
 
@@ -255,23 +252,23 @@ class NewForm extends Component {
                     </Col>
                     <Col md="3" className="form-group">
                       <Label htmlFor="dchDate">วันที่จำหน่าย</Label>
-                      <Input
+                      {/* <Input
                         id="dch_date"
                         name="dch_date"
                         type="text"
                         value={this.state.dch_date}
                         onChange={this.handleChange}
                         placeholder="วันที่ D/C"
-                      />
-                      {/* <DatePicker
-                        id="dchDate"
-                        name="dchDate"
-                        dateFormat="dd/MM/yyyy"
-                        selected={this.state.dchDate}
-                        onChange={this.handleDateChange.bind(this, 'dchDate')}
+                      /> */}
+                      <DatePicker
+                        id="dch_date"
+                        name="dch_date"
+                        dateFormat="yyyy-MM-dd"
+                        selected={this.state.dch_date}
+                        onChange={e => this.handleDateChange('dch_date', e)}
                         className="form-control"
                         placeholderText="วันที่จำหน่าย"
-                      /> */}
+                      />
                     </Col>
                   </Row>
 
@@ -293,23 +290,23 @@ class NewForm extends Component {
                     </Col>
                     <Col md="3" className="form-group">
                       <Label htmlFor="regDate">วันที่รับ Case</Label>
-                      <Input 
+                      {/* <Input 
                         id="reg_date"
                         name="reg_date"
                         type="text"
                         value={this.state.reg_date}
                         onChange={this.handleChange}
                         placeholder="วันที่รับ Case"
-                      />
-                      {/* <DatePicker
-                        id="regDate"
-                        name="regDate"
-                        dateFormat="dd/MM/yyyy"
-                        selected={this.state.regDate}
-                        onChange={this.handleDateChange.bind(this, 'regDate')}
+                      /> */}
+                      <DatePicker
+                        id="reg_date"
+                        name="reg_date"
+                        dateFormat="yyyy-MM-dd"
+                        selected={this.state.reg_date}
+                        onChange={e => this.handleDateChange('reg_date', e)}
                         className="form-control"
                         placeholderText="วันที่รับ Case"
-                      /> */}
+                      />
                     </Col>
                   </Row>
                 </CardBody>

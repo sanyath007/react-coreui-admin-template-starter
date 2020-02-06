@@ -3,6 +3,9 @@ import {
   FETCH_REGISTRATIONS_REQUEST,
   FETCH_REGISTRATIONS_SUCCESS,
   FETCH_REGISTRATIONS_FAILED,
+  ADD_REGISTRATIONS_REQUEST,
+  ADD_REGISTRATIONS_SUCCESS,
+  ADD_REGISTRATIONS_FAILED,
   SET_REGISTRATIONS_PAGER
 } from './types';
 
@@ -24,6 +27,21 @@ export const fetchRegistrations = link => dispatch => {
     })
 }
   
-export const addRegistration = (data) => dispatch => {
-  console.log(data);    
+export const addRegistration = data => dispatch => {
+  console.log(data);
+
+  dispatch({ type: FETCH_REGISTRATIONS_REQUEST });
+
+  axios.post('/api/imc/registrations', data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    console.log(res.data)
+    dispatch({ type: ADD_REGISTRATIONS_SUCCESS });
+  }).then(() => {
+
+  }).catch(err => {
+    dispatch({ type: ADD_REGISTRATIONS_FAILED });
+  })
 }
