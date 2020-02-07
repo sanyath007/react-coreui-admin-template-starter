@@ -40,7 +40,7 @@ export const addRegistration = data => dispatch => {
     console.log(res.data)
     dispatch({ type: ADD_REGISTRATIONS_SUCCESS });
   }).then(() => {
-
+    // Go somewhere
   }).catch(err => {
     dispatch({ type: ADD_REGISTRATIONS_FAILED });
   })

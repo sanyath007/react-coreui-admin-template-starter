@@ -22,6 +22,8 @@ import Dropzone from 'react-dropzone';
 import 'react-tagsinput/react-tagsinput.css';
 
 import ModalPatients from '../Modals/ModalPatients';
+import ModalBarthelIndex from '../Modals/ModalBarthelIndex';
+
 import { addVisition } from '../../redux/visitions';
 
 const initialState = {
@@ -305,10 +307,17 @@ class NewForm extends Component {
               </Form>
             </Card>
 
-            <ModalPatients 
+            {/* <ModalPatients 
+              modal={this.state.modal} 
+              toggle={() => this.toggleModal} 
+              onModalSelected={this.handleModalSelected} /> */}
+            
+            <ModalBarthelIndex 
               modal={this.state.modal} 
               toggle={() => this.toggleModal} 
               onModalSelected={this.handleModalSelected} />
+
+              
           </Col>
         </Row>
       </div>
