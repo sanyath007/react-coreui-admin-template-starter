@@ -11,7 +11,6 @@ import {
   Col,
   Form,
   FormGroup,
-  FormText,
   Input,
   Label,
   Row,
@@ -19,12 +18,12 @@ import {
 import TagsInput from 'react-tagsinput';
 import Dropzone from 'react-dropzone';
 
-import 'react-tagsinput/react-tagsinput.css';
-
 import ModalPatients from '../Modals/ModalPatients';
 import ModalBarthelIndex from '../Modals/ModalBarthelIndex';
 
 import { addVisition } from '../../redux/visitions';
+// CSS
+import 'react-tagsinput/react-tagsinput.css';
 
 const initialState = {
   id: '',
@@ -33,13 +32,14 @@ const initialState = {
   visit_count: 0,
   visit_date: moment(Date.now()).format('YYYY-MM-DD'),
   visitors: [],
-  barthel_score: 0,
+  barthel_score: '',
   impairment: '',
   complication: '',
   is_rehab: '',
   visit_status: '',
   attachments: [],
-  modal: false,
+  modalPatient: false,
+  modalBarthel: false,
 };
 
 const fileBoxStyle = {
@@ -70,7 +70,7 @@ class NewForm extends Component {
     addVisition: PropTypes.func.isRequired
   };
 
-  handleChange (e) {
+  handleChange(e) {
     const { name, value } = e.target;
 
     this.setState({
@@ -81,17 +81,11 @@ class NewForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     
-    const { modal, patient_name, ...visition} = this.state;
+    const { modalPatient, modalBarthel, patient_name, ...visition} = this.state;
     
     this.props.addVisition(visition);
 
     this.setState( this.initialState);
-  }
-    
-  toggleModal = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
   }
 
   handleTagsInputChange (tags) {
@@ -102,13 +96,31 @@ class NewForm extends Component {
     this.setState({ 
       attachments: this.state.attachments.concat(acceptedFiles) });
   }
+  
+  toggleModalPatient = () => {
+    this.setState({
+      modalPatient: !this.state.modalPatient
+    });
+  }
+  
+  toggleModalBarthel = () => {
+    this.setState({
+      modalBarthel: !this.state.modalBarthel
+    });
+  }
 
   handleModalSelected = (e, obj) => {
-      this.setState({
-        pid: obj.pid,
-        patient_name: obj.pname + obj.fname + ' ' + obj.lname,
-        modal: !this.state.modal
-      });
+    this.setState({
+      pid: obj.pid,
+      patient_name: obj.pname + obj.fname + ' ' + obj.lname,
+      modalPatient: !this.state.modalPatient
+    });
+  }
+
+  handleModalSaved = (e, obj) => {
+    this.setState({
+      modalBarthel: !this.state.modalBarthel
+    });
   }
 
   render () {
@@ -134,14 +146,14 @@ class NewForm extends Component {
                           type="text"
                           value={this.state.pid}
                           onChange={this.handleChange}
-                          placeholder="ผู้ป่วย"
+                          placeholder="PID"
                         />
                         <div className="input-group-append">
                           <button 
-                            className="btn btn-outline-secondary" 
                             type="button" 
-                            id="button-addon1" 
-                            onClick={this.toggleModal}
+                            id="btnPatient" 
+                            className="btn btn-outline-secondary" 
+                            onClick={this.toggleModalPatient}
                           >
                             <i className="material-icons">search</i>
                           </button>
@@ -199,14 +211,26 @@ class NewForm extends Component {
                   <Row form>
                     <Col md="4" className="form-group">
                       <Label htmlFor="barthelScore">Barthel Score</Label>
-                      <Input
-                        id="barthel_score"
-                        name="barthel_score"
-                        type="text"
-                        value={this.state.barthel_score}
-                        onChange={this.handleChange}
-                        placeholder="Barthel Score"
-                      />
+                      <div className="input-group mb-0">
+                        <Input
+                          id="barthel_score"
+                          name="barthel_score"
+                          type="text"
+                          value={this.state.barthel_score}
+                          onChange={this.handleChange}
+                          placeholder="Barthel Score"
+                        />
+                        <div className="input-group-append">
+                          <button
+                            type="button"
+                            id="btnBarthel"
+                            className="btn btn-outline-secondary"
+                            onClick={this.toggleModalBarthel}
+                          >
+                            <i className="material-icons">ประเมิน</i>
+                          </button>
+                        </div>
+                      </div>
                     </Col>
                     <Col md="4" className="form-group">
                       <Label htmlFor="age">Impairment</Label>
@@ -307,16 +331,15 @@ class NewForm extends Component {
               </Form>
             </Card>
 
-            {/* <ModalPatients 
-              modal={this.state.modal} 
-              toggle={() => this.toggleModal} 
-              onModalSelected={this.handleModalSelected} /> */}
+            <ModalPatients 
+              modal={this.state.modalPatient} 
+              toggle={this.toggleModalPatient} 
+              onModalSelected={this.handleModalSelected} />
             
             <ModalBarthelIndex 
-              modal={this.state.modal} 
-              toggle={() => this.toggleModal} 
-              onModalSelected={this.handleModalSelected} />
-
+              modal={this.state.modalBarthel} 
+              toggle={this.toggleModalBarthel} 
+              onModalSaved={this.handleModalSaved} />
               
           </Col>
         </Row>

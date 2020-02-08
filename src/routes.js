@@ -48,6 +48,7 @@ const RegistrationNew = React.lazy(() => import('./components/Registrations/NewF
 const Visitions = React.lazy(() => import('./components/Visitions/Visitions'));
 const VisitionNew = React.lazy(() => import('./components/Visitions/NewForm'));
 
+const BarthelIndex = React.lazy(() => import('./views/BarthelIndex'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -100,6 +101,8 @@ const routes = [
   
   { path: '/visitions', exact: true,  name: 'Visitions', component: Visitions },
   { path: '/visitions/new', exact: true, name: 'Add New Visitions', component: VisitionNew },
+
+  { path: '/barthel', exact: true, name: 'Barthel Index', component: BarthelIndex },
 ];
 
 export default routes;

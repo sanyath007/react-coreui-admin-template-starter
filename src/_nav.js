@@ -34,6 +34,11 @@ export default {
       icon: 'icon-directions',
     },
     {
+      name: 'Barthel Index',
+      url: '/barthel',
+      icon: 'icon-chart',
+    },
+    {
       name: 'Rehabilitations',
       url: '/rehabs',
       icon: 'icon-support',

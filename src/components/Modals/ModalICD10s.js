@@ -32,7 +32,7 @@ class ModalICD10s extends Component {
         isOpen={modal}
         toggle={toggle}
         size="lg"
-        id="modal-patients"
+        id="modal-icd10s"
         className={className}
       >
         <ModalHeader toggle={toggle}>เลือกผู้ป่วย</ModalHeader>
