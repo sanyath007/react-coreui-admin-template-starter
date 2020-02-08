@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import PropTypes, { object } from 'prop-types';
 import moment from 'moment';
+import { range } from 'lodash';
 import {
   Button,
   Card,
@@ -17,20 +18,28 @@ import {
 } from "reactstrap";
 import TagsInput from 'react-tagsinput';
 import Dropzone from 'react-dropzone';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 
 import ModalPatients from '../Modals/ModalPatients';
 import ModalBarthelIndex from '../Modals/ModalBarthelIndex';
 
 import { addVisition } from '../../redux/visitions';
+import { addBarthel } from '../../redux/barthel';
 // CSS
 import 'react-tagsinput/react-tagsinput.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
+import th from 'date-fns/locale/th';
+
+registerLocale('th', th)
+setDefaultLocale('th');
 
 const initialState = {
   id: '',
   pid: '',
   patient_name: '',
-  visit_count: 0,
-  visit_date: moment(Date.now()).format('YYYY-MM-DD'),
+  visit_count: 1,
+  visit_date: '',
   visitors: [],
   barthel_score: '',
   impairment: '',
@@ -38,6 +47,7 @@ const initialState = {
   is_rehab: '',
   visit_status: '',
   attachments: [],
+  barthel: null,
   modalPatient: false,
   modalBarthel: false,
 };
@@ -67,22 +77,40 @@ class NewForm extends Component {
   }
 
   static propTypes = {
-    addVisition: PropTypes.func.isRequired
+    addVisition: PropTypes.func.isRequired,
+    addBarthel: PropTypes.func.isRequired
   };
 
   handleChange(e) {
     const { name, value } = e.target;
 
+    console.log(`name: ${name}, value: ${value}`)
     this.setState({
       [name]: value
     });
   }
   
+  handleDateChange = (name, date) => {
+    this.setState({ [name]: date });
+  }
+  
   handleSubmit(e) {
     e.preventDefault();
     
-    const { modalPatient, modalBarthel, patient_name, ...visition} = this.state;
-    
+    const { modalPatient, modalBarthel, patient_name, barthel, ...visition} = this.state;
+
+    // Add patient pid and visition data to barthel
+    if(barthel) {
+      barthel['pid'] = this.state.pid;
+      barthel['visit_count'] = this.state.visit_count;
+      barthel['visit_date'] = moment(this.state.visit_date).format('YYYY-MM-DD');
+  
+      this.props.addBarthel(barthel);
+    }
+
+    // Cast datetime to string format
+    visition['visit_date'] = moment(visition.visit_date).format('YYYY-MM-DD');
+    // Store data to db.
     this.props.addVisition(visition);
 
     this.setState( this.initialState);
@@ -117,9 +145,13 @@ class NewForm extends Component {
     });
   }
 
-  handleModalSaved = (e, obj) => {
+  handleModalSaved = (barthel) => {
+    console.log(barthel);
+
     this.setState({
-      modalBarthel: !this.state.modalBarthel
+      modalBarthel: !this.state.modalBarthel,
+      barthel_score: barthel.score,
+      barthel: barthel,
     });
   }
 
@@ -175,23 +207,36 @@ class NewForm extends Component {
                     <Col md="6">
                       <Label htmlFor="visitCount">ครั้งที่</Label>
                       <Input
+                        type="select"
                         id="visit_count"
                         name="visit_count"
-                        type="text"
                         value={this.state.visit_count}
                         onChange={this.handleChange}
                         placeholder="ครั้งที่"
-                      />
+                      >
+                        { range(1, 11).map(count => (
+                          <option value={count}>{count}</option>
+                        ))}
+                      </Input>
                     </Col>
                     <Col md="6" className="form-group">
                       <Label htmlFor="visitDate">วันที่เยี่ยมบ้าน</Label>
-                      <Input 
+                      {/* <Input 
                         id="visit_date"
                         name="visit_date"
                         type="text"
                         value={this.state.visit_date}
                         onChange={this.handleChange}
                         placeholder="วันที่เยี่ยมบ้าน"
+                      /> */}
+                      <DatePicker
+                        id="visit_date"
+                        name="visit_date"
+                        dateFormat="yyyy-MM-dd"
+                        selected={this.state.visit_date}
+                        onChange={e => this.handleDateChange('visit_date', e)}
+                        className="form-control"
+                        placeholderText="วันที่เริ่มวินิจฉัย"
                       />
                     </Col>
                   </Row>
@@ -284,17 +329,26 @@ class NewForm extends Component {
                       <Label htmlFor="moo">สถานะการเยี่ยม</Label>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="0" onChange={this.handleChange} />{' '}ไม่พบผู้ป่วย
+                          <Input type="radio" name="visit_status" value="1" onChange={this.handleChange} />{' '}
+                          พบผู้ป่วย
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="1" onChange={this.handleChange} />{' '}ผู้ป่วยย้ายที่อยู่
+                          <Input type="radio" name="visit_status" value="0" onChange={this.handleChange} />{' '}
+                          ไม่พบผู้ป่วย
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="2" onChange={this.handleChange} />{' '}เสียชีวิตแล้ว
+                          <Input type="radio" name="visit_status" value="2" onChange={this.handleChange} />{' '}
+                          ผู้ป่วยย้ายที่อยู่
+                        </Label>
+                      </FormGroup>
+                      <FormGroup check>
+                        <Label check>
+                          <Input type="radio" name="visit_status" value="3" onChange={this.handleChange} />{' '}
+                          เสียชีวิตแล้ว
                         </Label>
                       </FormGroup>
                     </Col>
@@ -331,14 +385,15 @@ class NewForm extends Component {
               </Form>
             </Card>
 
-            <ModalPatients 
-              modal={this.state.modalPatient} 
-              toggle={this.toggleModalPatient} 
+            <ModalPatients
+              modal={this.state.modalPatient}
+              toggle={this.toggleModalPatient}
               onModalSelected={this.handleModalSelected} />
             
-            <ModalBarthelIndex 
-              modal={this.state.modalBarthel} 
-              toggle={this.toggleModalBarthel} 
+            <ModalBarthelIndex
+              modal={this.state.modalBarthel}
+              toggle={this.toggleModalBarthel}
+              patient={this.state.pid}
               onModalSaved={this.handleModalSaved} />
               
           </Col>
@@ -350,5 +405,5 @@ class NewForm extends Component {
 
 export default connect(
   null,
-  { addVisition }
+  { addVisition, addBarthel }
 )(NewForm);

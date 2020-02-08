@@ -9,14 +9,9 @@ import {
   CardHeader,
   Col,
   Form,
-  FormGroup,
   Input,
   Label,
   Row,
-  Table,
-  Modal,
-  ModalBody,
-  ModalHeader
 } from 'reactstrap';
 import moment from 'moment';
 

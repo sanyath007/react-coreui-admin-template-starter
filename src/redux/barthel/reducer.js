@@ -1,18 +1,19 @@
 import {
-  FETCH_VISITIONS_REQUEST,
-  FETCH_VISITIONS_SUCCESS,
-  FETCH_VISITIONS_FAILED,
-  ADD_VISITIONS_REQUEST,
-  ADD_VISITIONS_SUCCESS,
-  ADD_VISITIONS_FAILED
+  FETCH_BARTHELS_REQUEST,
+  FETCH_BARTHELS_SUCCESS,
+  FETCH_BARTHELS_FAILED,
+  ADD_BARTHELS_REQUEST,
+  ADD_BARTHELS_SUCCESS,
+  ADD_BARTHELS_FAILED,
+  SET_BARTHELS_PAGER
 } from './types';
 
 const initialState = {
   loading: false,
   errors: null,
   success: null,
-  visitions: [],
-  visition: null,
+  barthels: [],
+  barthel: null,
   pager: null
 };
 
@@ -20,31 +21,31 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case FETCH_VISITIONS_REQUEST:
+    case FETCH_BARTHELS_REQUEST:
       return {
         ...state,
         loading: true,
       };
-        case FETCH_VISITIONS_SUCCESS:
+    case FETCH_BARTHELS_SUCCESS:
       return {
         ...state,
         loading: false,
-        visitions: payload,
+        barthels: payload,
         errors: null
       };
-    case FETCH_VISITIONS_FAILED:
+    case FETCH_BARTHELS_FAILED:
       return {
         ...state,
         loading: false,
-        visitions: [],
+        barthels: [],
         errors: payload,
         success: null
       };
-    case ADD_VISITIONS_SUCCESS:
+    case ADD_BARTHELS_SUCCESS:
       return {
         ...state,
         loading: false,
-        visitions: [...state.visitions, payload],
+        barthels: [...state.barthels, payload],
         errors: null
       };
     default: return state;

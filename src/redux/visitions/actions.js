@@ -51,3 +51,17 @@ export const addVisition = data => dispatch => {
       dispatch({ type: ADD_VISITIONS_FAILED });
     });
 }
+
+export const addBarthel = data => dispatch => {
+  dispatch({ type: ADD_VISITIONS_REQUEST });
+  
+  axios.post('/api/imc/visitions', data)
+    .then(res => {
+      dispatch({ type: ADD_VISITIONS_SUCCESS, payload: res.data });
+    }).then(() => {
+
+    }).catch(err => {
+      console.log(err.response);
+      dispatch({ type: ADD_VISITIONS_FAILED });
+    });
+}
