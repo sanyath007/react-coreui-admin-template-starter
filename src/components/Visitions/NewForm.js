@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes, { object } from 'prop-types';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { range } from 'lodash';
+import uuid from 'uuid';
 import {
   Button,
   Card,
@@ -214,7 +215,7 @@ class NewForm extends Component {
                         placeholder="ครั้งที่"
                       >
                         { range(1, 11).map(count => (
-                          <option value={count}>{count}</option>
+                          <option value={count} key={ uuid() }>{count}</option>
                         ))}
                       </Input>
                     </Col>

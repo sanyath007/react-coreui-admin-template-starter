@@ -34,6 +34,8 @@ class DefaultHeader extends Component {
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 
+    const BASE_URL = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_BASE_URL : '../..';
+
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -102,7 +104,7 @@ class DefaultHeader extends Component {
           
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
-              <img src={'../../assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={`${BASE_URL}/assets/img/avatars/1.jpg`} className="img-avatar" alt="admin@bootstrapmaster.com" />
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>

@@ -5,55 +5,22 @@ import './polyfill'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import jwt from 'jsonwebtoken';
 import axios from 'axios';
-
-import store from './redux/store';
-import { setCurrentUser, logout } from './redux/auth';
-import setAuthorization from './utils/setAuthorizationToken';
 
 import './index.css';
 import App from './App';
 
+import guardAuth from './utils/guardAuth';
+import store from './redux/store';
 import * as serviceWorker from './serviceWorker';
 
 console.log(process.env.NODE_ENV);
 
-// if(process.env.NODE_ENV === 'development') {
-//   axios.defaults.baseURL = 'http://mnrhweb.com'
-// }
-
 if(process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://smkorat.com/mnrhweb/public'
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 }
 
-if(localStorage.jwtToken) {
-  console.log('jwtToken is available');
-  const { access_token: token, user } = JSON.parse(localStorage.jwtToken);
-
-  /** Option 1 comparing token.exp by Date.now */
-  // const decodedToken = jwt.decode(token);
-  // console.log(`${Date.now()} == ${decodedToken.exp}`);
-  
-  /** Option 1 Use jwt verify function */
-  jwt.verify(token, 'puU29GeajPSk7ouhRi0fPMijbQzww5x6QUEMWRK1QVdWx6nmPKRsBi9unBXhmdoF', (err, decoded) => {
-    console.log(`err: ${err}`);
-    console.log(decoded);
-
-    if (err) {     
-      store.dispatch(logout()); 
-      /** Set error message if token invalid */
-      // err = {
-      //   name: 'TokenExpiredError',
-      //   message: 'jwt expired',
-      //   expiredAt: decoded.exp
-      // }
-    } else {
-      setAuthorization(token);
-      store.dispatch(setCurrentUser(user));
-    }
-  });
-}
+guardAuth(localStorage.jwtToken, store);
 
 ReactDOM.render(
   <Provider store={store}>
