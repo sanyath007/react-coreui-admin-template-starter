@@ -24,7 +24,7 @@ console.log(process.env.NODE_ENV);
 // }
 
 if(process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://mnrhweb.com'
+  axios.defaults.baseURL = 'http://smkorat.com/mnrhweb/public'
 }
 
 if(localStorage.jwtToken) {
