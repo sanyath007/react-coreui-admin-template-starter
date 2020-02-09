@@ -62,7 +62,7 @@ class Visitions extends Component {
                   </thead>
                   <tbody>
                     {visitions.map((visit, index) => (
-                      <tr key={visit.id+visit.visit_count}>
+                      <tr key={visit.id+visit.visit_date}>
                         <td className="text-center">{index+1}</td>
                         <td className="text-center">{visit.visit_count}</td>
                         <td className="text-center">{visit.visit_date}</td>

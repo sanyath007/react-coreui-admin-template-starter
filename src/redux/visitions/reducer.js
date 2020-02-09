@@ -4,7 +4,8 @@ import {
   FETCH_VISITIONS_FAILED,
   ADD_VISITIONS_REQUEST,
   ADD_VISITIONS_SUCCESS,
-  ADD_VISITIONS_FAILED
+  ADD_VISITIONS_FAILED,
+  SET_VISITIONS_PAGER
 } from './types';
 
 const initialState = {
@@ -39,6 +40,11 @@ export default function(state = initialState, action) {
         visitions: [],
         errors: payload,
         success: null
+      };
+    case SET_VISITIONS_PAGER:
+      return {
+        ...state,
+        pager: payload
       };
     case ADD_VISITIONS_SUCCESS:
       return {

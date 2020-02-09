@@ -15,10 +15,9 @@ export const fetchVisitions = link => dispatch => {
   dispatch({ type: FETCH_VISITIONS_REQUEST });
 
   axios.get(apiEnpoint)
-    .then(res => {      
+    .then(res => {     
       dispatch({ type: FETCH_VISITIONS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_VISITIONS_PAGER, payload: res.data.pager });
-      
+      dispatch({ type: SET_VISITIONS_PAGER, payload: res.data.pager });      
     })
     .catch(err => {
       console.log(err.response);

@@ -7,6 +7,8 @@ import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/reac
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
 
+import NavItemPopup from '../../components/Layouts/NavItemPopup';
+
 const propTypes = {
   children: PropTypes.node,
 };
@@ -14,8 +16,21 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
-  render() {
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      popup: false
+    }
+
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({ popup: !this.state.popup })
+  }
+
+  render() {
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
 
@@ -38,17 +53,53 @@ class DefaultHeader extends Component {
           <NavItem className="px-3">
             <NavLink to="#" className="nav-link">Settings</NavLink>
           </NavItem>
-        </Nav>
+        </Nav>        
         <Nav className="ml-auto" navbar>
+          {/* ================== Notifications ================== */}
+          <UncontrolledDropdown nav direction="down">
+            <DropdownToggle nav>
+              <i className="icon-bell"></i>
+              <Badge pill color="danger">5</Badge>
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem header tag="div" className="text-center"><strong>You have 5 notifications</strong></DropdownItem>
+              <DropdownItem><i className="icon-user-follow text-success"></i> New user registered<Badge color="success">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-user-unfollow text-danger"></i> User deleted<Badge color="danger">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-chart text-info"></i> Sales report is ready<Badge color="info">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-basket-loaded text-primary"></i> New client<Badge color="primary">42</Badge></DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          {/* ================== Notifications ================== */}
+
+          {/* ================== tasks ================== */}
           <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-bell"></i><Badge pill color="danger">5</Badge></NavLink>
+            <NavLink to="#" className="nav-link">
+              <i className="icon-list"></i>
+              <Badge pill color="warning">15</Badge>
+            </NavLink>
           </NavItem>
+          {/* ================== tasks ================== */}
+
+          {/* ================== messages ================== */}
+          <UncontrolledDropdown nav direction="down">
+            <DropdownToggle nav>
+              <i className="icon-envelope-letter"></i>
+              <Badge pill color="info">7</Badge>
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem header tag="div" className="text-center"><strong>You have 7 messages</strong></DropdownItem>
+              <DropdownItem><i className="icon-user-follow text-success"></i> New user registered<Badge color="success">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-user-unfollow text-danger"></i> User deleted<Badge color="danger">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-chart text-info"></i> Sales report is ready<Badge color="info">42</Badge></DropdownItem>
+              <DropdownItem><i className="icon-basket-loaded text-primary"></i> New client<Badge color="primary">42</Badge></DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          {/* ================== messages ================== */}
+
           <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-list"></i></NavLink>
+            <NavLink to="#" className="nav-link"><i className="icon-location-pin"></i></NavLink>            
           </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink to="#" className="nav-link"><i className="icon-location-pin"></i></NavLink>
-          </NavItem>
+          
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
               <img src={'../../assets/img/avatars/1.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
