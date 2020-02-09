@@ -9,19 +9,18 @@ import {
   SET_BARTHELS_PAGER
 } from './types';
 
-export const fetchBarthels = link => dispatch => {
-  let apiEnpoint = link || `/api/imc/barthels`;
-
+export const fetchBarthels = pid => dispatch => {
   dispatch({ type: FETCH_BARTHELS_REQUEST });
 
-  axios.get(apiEnpoint)
-    .then(res => {      
-      dispatch({ type: FETCH_BARTHELS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_BARTHELS_PAGER, payload: res.data.pager });
+  axios.get(`/api/imc/barthels/${pid}`)
+    .then(res => {
+      dispatch({ type: FETCH_BARTHELS_SUCCESS, payload: res.data });
+      // dispatch({ type: SET_BARTHELS_PAGER, payload: res.data.pager });
       
     })
     .catch(err => {
-      console.log(err.response);
+      console.log(err);
+      dispatch({ type: FETCH_BARTHELS_FAILED, payload: err });
     });
 }
 

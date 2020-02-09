@@ -199,7 +199,6 @@ class NewForm extends Component {
                         name="patient_name"
                         type="text"
                         value={this.state.patient_name}
-                        onChange={this.handleChange}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
                         readOnly
                       />

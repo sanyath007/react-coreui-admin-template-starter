@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import uuid from 'uuid';
 import {
   Card,
   CardBody,
@@ -11,8 +14,83 @@ import {
   Table
 } from 'reactstrap';
 
+import ModalPatients from '../../components/Modals/ModalPatients';
+import { fetchBarthels } from '../../redux/barthel';
+
 class BarthelIndex extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      patient: {
+        pid: '',
+        name: ''
+      },
+      modal: false
+    }
+
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleModalSelected = this.handleModalSelected.bind(this);
+  }
+
+  static propTypes = {
+    barthels: PropTypes.array.isRequired,
+    fetchBarthels: PropTypes.func.isRequired
+  };
+
+  toggleModal() {
+    this.setState({ modal: !this.state.modal })
+  }
+
+  handleChange(e) {
+    const { name, value } = e.target;
+
+    this.setState( prevState => ({
+      ...prevState,
+      patient: {
+        ...prevState.patient, [name]: value 
+      }
+    }));
+  }
+
+  handleModalSelected(e, obj) {
+    this.props.fetchBarthels(obj.pid);
+
+    this.setState({
+      patient: {
+        pid: obj.pid,
+        name: obj.pname + obj.fname + ' ' + obj.lname,
+      },
+      modal: !this.state.modal
+    });
+  }
+
   render() {
+    const feeding = [];
+    const grooming = [];
+    const transfer = [];
+    const mobility = [];
+    const toilet = [];
+    const dressing = [];
+    const stair = [];
+    const bathing = [];
+    const bowel = [];
+    const bladder = [];
+
+    this.props.barthels.map((b, i) => {
+      feeding.push(b['feeding']);
+      grooming.push(b['grooming']);
+      transfer.push(b['transfer']);
+      mobility.push(b['mobility']);
+      toilet.push(b['toilet']);
+      dressing.push(b['dressing']);
+      stair.push(b['stair']);
+      bathing.push(b['bathing']);
+      bowel.push(b['bowel']);
+      bladder.push(b['bladder']);
+    });
+
     return (
       <div className="animated fadeIn">
         <Row>
@@ -34,13 +112,16 @@ class BarthelIndex extends Component {
                           id="pid"
                           name="pid"
                           type="text"
+                          value={this.state.patient.pid}
                           placeholder="PID"
+                          onChange={this.handleChange}
                         />
                         <div className="input-group-append">
                           <button 
                             type="button" 
                             id="btnPatient" 
                             className="btn btn-outline-secondary"
+                            onClick={this.toggleModal}
                           >
                             <i className="material-icons">search</i>
                           </button>
@@ -51,9 +132,10 @@ class BarthelIndex extends Component {
                   <Col md={8}>
                     <FormGroup>
                       <Input
-                        id="patient_name"
-                        name="patient_name"
+                        id="name"
+                        name="name"
                         type="text"
+                        value={this.state.patient.name}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
                         readOnly
                       />
@@ -66,14 +148,14 @@ class BarthelIndex extends Component {
                     <tr>
                       <th style={{ width: '20%'}} scope="col">วินิจฉัยโรค</th>
                       <th style={{ width: '25%'}} scope="col">ประเมินคะแนน</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
-                      <th scope="col">ครั้งที่</th>
+                      <th scope="col">ครั้งที่ 1</th>
+                      <th scope="col">ครั้งที่ 2</th>
+                      <th scope="col">ครั้งที่ 3</th>
+                      <th scope="col">ครั้งที่ 4</th>
+                      <th scope="col">ครั้งที่ 5</th>
+                      <th scope="col">ครั้งที่ 6</th>
+                      <th scope="col">ครั้งที่ 7</th>
+                      <th scope="col">ครั้งที่ 8</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -90,14 +172,7 @@ class BarthelIndex extends Component {
                           ตักช่อยเหลือตนเองได้ (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {feeding && feeding.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>2. Grooming ล้างหน้า แปรงฟัน หวีผม</td>
@@ -109,14 +184,7 @@ class BarthelIndex extends Component {
                           ทำเองได้ (5)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {grooming && grooming.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>3. Transfer ลุกนั่งจากที่นอน หรือจากเตียงไปยังเก้าอี้</td>
@@ -134,14 +202,7 @@ class BarthelIndex extends Component {
                           ทำเองได้ (15)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {transfer && transfer.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>4. Mobility การเคลื่อนที่ภายในห้องหรือบ้าน</td>
@@ -159,14 +220,7 @@ class BarthelIndex extends Component {
                           เดินหรือเคลื่อนที่ได้เอง (15)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {mobility && mobility.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>5. Toilet การใช้ห้องน้ำ</td>
@@ -181,14 +235,7 @@ class BarthelIndex extends Component {
                           ช่วยเหลือตนเองได้ทั้งหมด (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {toilet && toilet.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>6. Dressing การสวมใส่เสื้อผ้า</td>
@@ -203,14 +250,7 @@ class BarthelIndex extends Component {
                           สวมใส่เองได้ทั้งหมด (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {dressing && dressing.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>7. Stair การขึ้นลงบันได 1 ขั้น</td>
@@ -225,14 +265,7 @@ class BarthelIndex extends Component {
                           ช่วยเหลือตนเองได้ทั้งหมด (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {stair && stair.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>8. Bathing การอาบน้ำ</td>
@@ -244,14 +277,7 @@ class BarthelIndex extends Component {
                           ทำเองได้ (5)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {bathing && bathing.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>9. Bowel การกลั้น ถ่ายอุจจาระใน 1 สัปดาห์ที่ผ่านมา</td>
@@ -266,14 +292,7 @@ class BarthelIndex extends Component {
                           กลั้นได้ปกติ (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {bowel && bowel.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                     <tr>
                       <td>10. Bladder การกลั้น ถ่ายปัสสาวะใน 1 สัปดาห์ที่ผ่านมา</td>
@@ -288,19 +307,18 @@ class BarthelIndex extends Component {
                           กลั้นได้ปกติ (10)  
                         </FormGroup>
                       </td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      {bladder && bladder.map(f => <td key={uuid()}>{f}</td>)}
                     </tr>
                   </tbody>
                 </Table>
               </CardBody>
             </Card>
+
+            <ModalPatients
+              modal={this.state.modal}
+              toggle={this.toggleModal}
+              onModalSelected={this.handleModalSelected} />
+
           </Col>
         </Row>
       </div>
@@ -308,4 +326,11 @@ class BarthelIndex extends Component {
   }
 }
 
-export default BarthelIndex;
+const mapStateToProps = state => ({
+  barthels: state.barthel.barthels
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchBarthels }
+)(BarthelIndex);

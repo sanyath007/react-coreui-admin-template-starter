@@ -10,6 +10,7 @@ import amphurReducer from './amphur/reducer';
 import tambonReducer from './tambon/reducer';
 import icd10Reducer from './icd10/reducer';
 import hospcodeReducer from './hospcode/reducer';
+import barthelReducer from './barthel/reducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   amphur: amphurReducer,
   tambon: tambonReducer,
   icd10: icd10Reducer,
-  hospcode: hospcodeReducer
+  hospcode: hospcodeReducer,
+  barthel: barthelReducer
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
