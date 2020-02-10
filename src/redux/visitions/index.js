@@ -1,4 +1,8 @@
 export {
   fetchVisitions,
-  addVisition
+  fetchVisition,
+  addVisition,
+  updateVisition,
+  deleteVisition,
+  hideAlert
 } from './actions';

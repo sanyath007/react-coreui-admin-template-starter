@@ -19,7 +19,7 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { updatePatient, fetchPatient } from '../../redux/patients';
+import { updatePatient } from '../../redux/patients';
 import { fetchChangwats } from '../../redux/changwat';
 import { fetchAmphurs } from '../../redux/amphur';
 import { fetchTambons } from '../../redux/tambon';
@@ -67,7 +67,6 @@ class EditForm extends Component {
     amphurs: PropTypes.array.isRequired,
     tambons: PropTypes.array.isRequired,
     updatePatient: PropTypes.func.isRequired,
-    fetchPatient: PropTypes.func.isRequired,
     fetchChangwats: PropTypes.func.isRequired,
     fetchAmphurs: PropTypes.func.isRequired,
     fetchTambons: PropTypes.func.isRequired,
@@ -75,8 +74,6 @@ class EditForm extends Component {
 
   componentDidMount() {
     console.log('Patients EditForm component mounted')
-    // const id = this.props.match.params.id;
-    // this.props.fetchPatient(id)
 
     this.props.fetchChangwats();
     this.props.fetchAmphurs();
@@ -85,6 +82,7 @@ class EditForm extends Component {
   
   componentDidUpdate(nextProps) {
     const { patient } = this.props;
+    
     if (nextProps.patient !== patient) {
       const { created_at, updated_at, ...pt } = patient;
 
@@ -435,7 +433,6 @@ export default connect(
   mapStateToProps,
   { 
     updatePatient,
-    fetchPatient,
     fetchChangwats,
     fetchAmphurs,
     fetchTambons

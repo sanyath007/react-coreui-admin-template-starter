@@ -6,9 +6,18 @@ import PropTypes from 'prop-types';
 
 import { fetchVisitions } from '../../redux/visitions';
 
+import Notification from './../Notifications/Notification';
 import Pagination from '../Paginations/Pagination';
 
 class Visitions extends Component {
+  static propTypes = {
+    visitions: PropTypes.array.isRequired,
+    pager: PropTypes.object,
+    isSuccess: PropTypes.any,
+    isError: PropTypes.any,
+    fetchVisitions: PropTypes.func.isRequired
+  };
+
   componentDidMount() {
     this.props.fetchVisitions()
   }
@@ -19,13 +28,44 @@ class Visitions extends Component {
     this.props.fetchVisitions(link);
   }
 
+  handleEdit = (e, id) => {
+    e.preventDefault();
+
+    this.props.fetchPatient(id);
+
+    this.props.history.push(`/patients/edit/${id}`)
+  }
+
+  handleDelete = (e, id) => {
+    e.preventDefault();
+
+    if(window.confirm(`Are you sure to delete this patient (ID: ${id}) ?`)) {
+      this.props.deletePatient(id)
+    }
+  }
+  
   render() {
-    const { visitions, pager } = this.props;
+    const { visitions, pager, isSuccess, isError } = this.props;
 
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" md="12" sm="6">
+
+            { isSuccess && isSuccess.status && (
+              <Notification
+                type={ 'success' }
+                message={ isSuccess.message }
+                toggle={() => this.props.hideAlert()} />
+            )}
+            
+            { isError && (
+              <Notification
+                type={ 'danger' }
+                message={ isError.message }
+                toggle={() => this.props.hideAlert()} />
+            )}
+
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> Visitions <small className="text-muted">example</small>
@@ -110,7 +150,9 @@ class Visitions extends Component {
 
 const mapStateToProps = state => ({
   visitions: state.visition.visitions,
-  pager: state.visition.pager
+  pager: state.visition.pager,
+  isSuccess: state.visition.success,
+  isError: state.visition.errors
 });
 
 export default connect(

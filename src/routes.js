@@ -44,9 +44,11 @@ const PatientEdit = React.lazy(() => import('./components/Patients/EditForm'));
 
 const Registrations = React.lazy(() => import('./components/Registrations/Registrations'));
 const RegistrationNew = React.lazy(() => import('./components/Registrations/NewForm'));
+const RegistrationEdit = React.lazy(() => import('./components/Registrations/EditForm'));
 
 const Visitions = React.lazy(() => import('./components/Visitions/Visitions'));
 const VisitionNew = React.lazy(() => import('./components/Visitions/NewForm'));
+const VisitionEdit = React.lazy(() => import('./components/Visitions/EditForm'));
 
 const BarthelIndex = React.lazy(() => import('./views/BarthelIndex'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -97,10 +99,12 @@ const routes = [
   { path: '/patients/edit/:id', exact: true, name: 'Edit Patient', component: PatientEdit },
 
   { path: '/registrations', exact: true,  name: 'Registrations', component: Registrations },
-  { path: '/registrations/new', exact: true, name: 'Add New Registrations', component: RegistrationNew },
+  { path: '/registrations/new', exact: true, name: 'Add New Registration', component: RegistrationNew },
+  { path: '/registrations/edit/:id', exact: true, name: 'Edit New Registration', component: RegistrationEdit },
   
   { path: '/visitions', exact: true,  name: 'Visitions', component: Visitions },
-  { path: '/visitions/new', exact: true, name: 'Add New Visitions', component: VisitionNew },
+  { path: '/visitions/new', exact: true, name: 'Add New Visition', component: VisitionNew },
+  { path: '/visitions/edit/:id', exact: true, name: 'Edit New Visition', component: VisitionEdit },
 
   { path: '/barthel', exact: true, name: 'Barthel Index', component: BarthelIndex },
 ];

@@ -49,7 +49,6 @@ class Patients extends Component {
 
   render() {
     const { patients, pager, isSuccess, isError } = this.props;
-    console.log(isError)
 
     return (
       <div className="animated fadeIn">

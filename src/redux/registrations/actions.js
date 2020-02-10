@@ -3,10 +3,20 @@ import {
   FETCH_REGISTRATIONS_REQUEST,
   FETCH_REGISTRATIONS_SUCCESS,
   FETCH_REGISTRATIONS_FAILED,
-  ADD_REGISTRATIONS_REQUEST,
-  ADD_REGISTRATIONS_SUCCESS,
-  ADD_REGISTRATIONS_FAILED,
-  SET_REGISTRATIONS_PAGER
+  FETCH_REGISTRATION_REQUEST,
+  FETCH_REGISTRATION_SUCCESS,
+  FETCH_REGISTRATION_FAILED,
+  ADD_REGISTRATION_REQUEST,
+  ADD_REGISTRATION_SUCCESS,
+  ADD_REGISTRATION_FAILED,
+  UPDATE_REGISTRATION_REQUEST,
+  UPDATE_REGISTRATION_SUCCESS,
+  UPDATE_REGISTRATION_FAILED,
+  DELETE_REGISTRATION_REQUEST,
+  DELETE_REGISTRATION_SUCCESS,
+  DELETE_REGISTRATION_FAILED,
+  SET_REGISTRATIONS_PAGER,
+  HIDE_ALERT
 } from './types';
 
 export const fetchRegistrations = link => dispatch => {
@@ -19,29 +29,98 @@ export const fetchRegistrations = link => dispatch => {
       console.log(res.data);
       
       dispatch({ type: FETCH_REGISTRATIONS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_REGISTRATIONS_PAGER, payload: res.data.pager });
-      
+      dispatch({ type: SET_REGISTRATIONS_PAGER, payload: res.data.pager });      
     })
     .catch(err => {
       console.log(err.response);
     })
 }
-  
+
 export const addRegistration = data => dispatch => {
-  console.log(data);
-
-  dispatch({ type: FETCH_REGISTRATIONS_REQUEST });
-
+  dispatch({ type: FETCH_REGISTRATION_REQUEST });
+  
   axios.post('/api/imc/registrations', data, {
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res => {
     console.log(res.data)
-    dispatch({ type: ADD_REGISTRATIONS_SUCCESS });
+    dispatch({
+      type: ADD_REGISTRATION_SUCCESS,
+      payload: res.data
+    });
   }).then(() => {
-    // Go somewhere
+    dispatch(fetchRegistrations());
   }).catch(err => {
-    dispatch({ type: ADD_REGISTRATIONS_FAILED });
+    dispatch({ type: ADD_REGISTRATION_FAILED });
   })
+}
+
+export const fetchRegistration = id => dispatch => {
+  dispatch({ type: FETCH_REGISTRATION_REQUEST });
+  
+  axios.get(`/api/imc/registrations/${id}`)
+  .then(res => {
+    console.log(res.data[0]);
+    dispatch({ type: FETCH_REGISTRATION_SUCCESS, payload: res.data[0] });      
+  })
+  .catch(err => {
+    console.log(err.response);
+  })
+}
+
+export const updateRegistration = (id, data, history) => dispatch => {
+  dispatch({ type: UPDATE_REGISTRATION_REQUEST });
+
+  axios.put(`/api/imc/registrations/${id}`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    const { created_at, updated_at, ...updatedData } = res.data;
+
+    dispatch({
+      type: UPDATE_REGISTRATION_SUCCESS,
+      payload: {
+        id: id,
+        registration: updatedData
+      }
+    });
+  }).then(() => {
+    history.push('/registrations');
+  }).catch(err => {
+    dispatch({
+      type: UPDATE_REGISTRATION_FAILED,
+      payload: {}
+    });
+  });
+}
+
+export const deleteRegistration = id => dispatch => {
+  dispatch({ type: DELETE_REGISTRATION_REQUEST });
+
+  axios.delete(`/api/imc/registrations/${id}`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => {
+    dispatch({
+      type: DELETE_REGISTRATION_SUCCESS,
+      payload: res.data
+    })
+  }).then(() => {
+      dispatch(fetchRegistrations());
+  }).catch(err => {
+    dispatch({ 
+      type: DELETE_REGISTRATION_FAILED,
+      payload: {
+        status: err.response.status,
+        message: err.response.data.message
+      }
+    });
+  });
+}
+
+export const hideAlert = () => dispatch => {
+  dispatch({ type: HIDE_ALERT })
 }

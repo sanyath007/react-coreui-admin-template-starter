@@ -126,7 +126,7 @@ export const updatePatient = (id, patient, history) => dispatch => {
   });
 }
 
-export const deletePatient = (id) => dispatch => {
+export const deletePatient = id => dispatch => {
   dispatch({ type: DELETE_PATIENT_REQUEST });
 
   console.log(id);

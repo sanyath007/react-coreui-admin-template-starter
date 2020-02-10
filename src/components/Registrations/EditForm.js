@@ -16,7 +16,7 @@ import {
 import moment from 'moment';
 
 import { fetchHosps, fetchPcus } from '../../redux/hospcode';
-import { addRegistration } from '../../redux/registrations';
+import { updateRegistration } from '../../redux/registrations';
 
 import ModalPatients from '../Modals/ModalPatients';
 import ModalICD10s from '../Modals/ModalICD10s';
@@ -29,22 +29,24 @@ registerLocale('th', th)
 setDefaultLocale('th');
 
 const initialState = {
-  id: '',
-  pid: '',
-  patient_name: '',
-  dx: '',
-  dx_desc: '',
-  dx_date: '',
-  dch_hosp: '',
-  dch_date: '',
-  pcu: '',
-  reg_date: '',
-  reg_status: '',
+  registration: {
+    id: '',
+    pid: '',
+    patient_name: '',
+    dx: '',
+    dx_desc: '',
+    dx_date: '',
+    dch_hosp: '',
+    dch_date: '',
+    pcu: '',
+    reg_date: '',
+    reg_status: ''
+  },
   modalPatients: false,
   modalIcd10: false
 };
 
-class NewForm extends Component {
+class EditForm extends Component {
   constructor (props) {
     super(props);
 
@@ -58,14 +60,34 @@ class NewForm extends Component {
   }
 
   static propType = {
+    registration: PropTypes.any,
     fetchHosps: PropTypes.func.isRequired,
     fetchPcus: PropTypes.func.isRequired,
-    addRegistration: PropTypes.func.isRequired
+    updateRegistration: PropTypes.func.isRequired
   };
 
   componentDidMount() {
     this.props.fetchHosps();
     this.props.fetchPcus();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.registration !== this.props.registration) {
+      const { created_at, updated_at, ...registration } = nextProps.registration
+
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          registration: {
+            dx_date: moment(registration.dx_date).format('DD/MM/YYYY'),
+            dch_date: moment(registration.dch_date).format('DD/MM/YYYY'),
+            reg_date: moment(registration.reg_date).format('DD/MM/YYYY'),
+            ...prevState.registration,
+            ...registration
+          }
+        }
+      });
+    }
   }
 
   togglePatients() {
@@ -83,46 +105,77 @@ class NewForm extends Component {
   handleChange(e) {
     const { name, value } = e.target;
 
-    this.setState({
-      [name]: value
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        registration: {
+          ...prevState.registration,
+          [name]: value
+        }
+      };
     });
   }
 
   handleDateChange = (name, date) => {
-    this.setState({ [name]: date });
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        registration: {
+          ...prevState.registration,
+          [name]: date
+        }
+      };
+    });
   }
   
   handleSubmit(event) {
     event.preventDefault();
     
-    const { id, patient_name, dx_desc, modalIcd10, modalPatients, ...registration } = this.state;
+    const { id, patient_name, dx_desc, age_y, dx_date, dch_date, reg_date, ...registration } = this.state.registration;
 
-    this.props.addRegistration(registration);
+    const updateData = {
+      ...registration,
+      dx_date: moment(dx_date).format('YYYY-MM-DD'),
+      dch_date: moment(dch_date).format('YYYY-MM-DD'),
+      reg_date: moment(reg_date).format('YYYY-MM-DD'),
+    }
+
+    this.props.updateRegistration(id, updateData, this.props.history);
 
     this.setState(initialState);
-
-    this.props.history.push('/registrations');
   }
 
   handleModalSelected = (e, obj) => {
     console.log(obj)
     if(this.state.modalPatients) {
-      this.setState({
-        pid: obj.pid,
-        patient_name: obj.pname + obj.fname + ' ' + obj.lname,
-        modalPatients: !this.state.modalPatients
-      })
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          modalPatients: !this.state.modalPatients,
+          registration: {
+            ...prevState.registration,
+            pid: obj.pid,
+            patient_name: obj.pname + obj.fname + ' ' + obj.lname,
+          }
+        };
+      });
     } else {
-      this.setState({
-        dx: obj.code,
-        dx_desc: obj.name,
-        modalIcd10: !this.state.modalIcd10
-      })
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          modalIcd10: !this.state.modalIcd10,
+          registration: {
+            ...prevState.registration,
+            dx: obj.code,
+            dx_desc: obj.name,
+          }
+        };
+      });
     }
   }
 
   render () {
-    const { hosps, pcus, pagerPatients, pagerIcd10s } = this.props;
+    const { hosps, pcus } = this.props;
     
     return (
       <div className="animated fadeIn">
@@ -131,7 +184,7 @@ class NewForm extends Component {
             <Card>
               <Form onSubmit={this.handleSubmit}>
                 <CardHeader>
-                  <strong>New Registration</strong>
+                  <strong>Edit Registration</strong>
                   <small> Form</small>
                 </CardHeader>
                 <CardBody>
@@ -143,7 +196,7 @@ class NewForm extends Component {
                           id="pid"
                           name="pid"
                           type="text"
-                          value={this.state.pid}
+                          value={this.state.registration.pid}
                           onChange={this.handleChange}
                           placeholder="ผู้ป่วย"
                         />
@@ -165,8 +218,7 @@ class NewForm extends Component {
                         id="patient_name"
                         name="patient_name"
                         type="text"
-                        value={this.state.patient_name}
-                        onChange={this.handleChange}
+                        value={this.state.registration.patient_name}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
                         readOnly
                       />
@@ -177,7 +229,7 @@ class NewForm extends Component {
                         id="dx_date"
                         name="dx_date"
                         type="text"
-                        value={this.state.dx_date}
+                        value={this.state.registration.dx_date}
                         onChange={this.handleChange}
                         placeholder="วันที่เริ่มวินิจฉัย"
                       /> */}
@@ -185,7 +237,7 @@ class NewForm extends Component {
                         id="dx_date"
                         name="dx_date"
                         dateFormat="yyyy-MM-dd"
-                        selected={this.state.dx_date}
+                        selected={Date.parse(this.state.registration.dx_date)}
                         onChange={e => this.handleDateChange('dx_date', e)}
                         className="form-control"
                         placeholderText="วันที่เริ่มวินิจฉัย"
@@ -201,7 +253,7 @@ class NewForm extends Component {
                           id="dx"
                           name="dx"
                           type="text"
-                          value={this.state.dx}
+                          value={this.state.registration.dx}
                           onChange={this.handleChange}
                           placeholder="ICD10"
                         />
@@ -223,8 +275,7 @@ class NewForm extends Component {
                         id="dx_desc"
                         name="dx_desc"
                         type="text"
-                        value={this.state.dx_desc}
-                        onChange={this.handleChange}
+                        value={this.state.registration.dx_desc}
                         placeholder="วินิจฉัยโรค"
                         readOnly
                       />
@@ -238,7 +289,7 @@ class NewForm extends Component {
                         type="select"
                         id="dch_hosp"
                         name="dch_hosp"
-                        value={this.state.dch_hosp}
+                        value={this.state.registration.dch_hosp}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -253,7 +304,7 @@ class NewForm extends Component {
                         id="dch_date"
                         name="dch_date"
                         type="text"
-                        value={this.state.dch_date}
+                        value={this.state.registration.dch_date}
                         onChange={this.handleChange}
                         placeholder="วันที่ D/C"
                       /> */}
@@ -261,7 +312,7 @@ class NewForm extends Component {
                         id="dch_date"
                         name="dch_date"
                         dateFormat="yyyy-MM-dd"
-                        selected={this.state.dch_date}
+                        selected={Date.parse(this.state.registration.dch_date)}
                         onChange={e => this.handleDateChange('dch_date', e)}
                         className="form-control"
                         placeholderText="วันที่จำหน่าย"
@@ -276,7 +327,7 @@ class NewForm extends Component {
                         type="select"
                         id="pcu"
                         name="pcu"
-                        value={this.state.pcu}
+                        value={this.state.registration.pcu}
                         onChange={this.handleChange}
                       >
                         <option>Choose...</option>
@@ -291,7 +342,7 @@ class NewForm extends Component {
                         id="reg_date"
                         name="reg_date"
                         type="text"
-                        value={this.state.reg_date}
+                        value={this.state.registration.reg_date}
                         onChange={this.handleChange}
                         placeholder="วันที่รับ Case"
                       /> */}
@@ -299,7 +350,7 @@ class NewForm extends Component {
                         id="reg_date"
                         name="reg_date"
                         dateFormat="yyyy-MM-dd"
-                        selected={this.state.reg_date}
+                        selected={Date.parse(this.state.registration.reg_date)}
                         onChange={e => this.handleDateChange('reg_date', e)}
                         className="form-control"
                         placeholderText="วันที่รับ Case"
@@ -308,8 +359,8 @@ class NewForm extends Component {
                   </Row>
                 </CardBody>
                 <CardFooter style={{ textAlign: "right" }}>
-                  <Button type="submit" size="sm" color="primary">
-                    <i className="fa fa-dot-circle-o"></i> ลงทะเบียนผู้ป่วย
+                  <Button type="submit" size="sm" color="warning">
+                    <i className="fa fa-dot-circle-o"></i> แก้ไขทะเบียนผู้ป่วย
                   </Button>
                 </CardFooter>
               </Form>
@@ -333,11 +384,12 @@ class NewForm extends Component {
 }
 
 const mapStateToProps = state => ({
+  registration: state.registration.registration,
   hosps: state.hospcode.hosps,
   pcus: state.hospcode.pcus
 });
 
 export default connect(
   mapStateToProps,
-  { fetchHosps, fetchPcus, addRegistration }
-)(NewForm);
+  { fetchHosps, fetchPcus, updateRegistration }
+)(EditForm);

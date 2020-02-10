@@ -4,15 +4,21 @@ import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fetchRegistrations } from '../../redux/registrations';
+import { fetchRegistrations, fetchRegistration, deleteRegistration, hideAlert } from '../../redux/registrations';
 
+import Notification from './../Notifications/Notification';
 import Pagination from '../Paginations/Pagination';
 
 class Registrations extends Component {
   static propTypes = {
     registrations: PropTypes.array.isRequired,
     pager: PropTypes.object,
-    fetchRegistrations: PropTypes.func.isRequired
+    isSuccess: PropTypes.any,
+    isError: PropTypes.any,
+    fetchRegistrations: PropTypes.func.isRequired,
+    fetchRegistration: PropTypes.func.isRequired,
+    deleteRegistration: PropTypes.func.isRequired,
+    hideAlert: PropTypes.func,
   };
 
   componentDidMount() {
@@ -24,20 +30,49 @@ class Registrations extends Component {
     
     this.props.fetchPatients(link);
   }
+
+  handleEdit = (e, id) => {
+    e.preventDefault();
+
+    this.props.fetchRegistration(id);
+
+    this.props.history.push(`/registrations/edit/${id}`)
+  }
+
+  handleDelete = (e, id) => {
+    e.preventDefault();
+
+    if(window.confirm(`Are you sure to delete this patient (ID: ${id}) ?`)) {
+      this.props.deleteRegistration(id)
+    }
+  }
   
   render() {
-    const { registrations, pager } = this.props;
+    const { registrations, pager, isSuccess, isError } = this.props;
     
-    const setPageItemClass = (link) => link ? "page-item" : "page-item disabled";
-    const setCurrentPageClass = (page) => page === pager.current_page ? "page-item active" : "page-item";
-
     return (
       <div className="animated fadeIn">
         <Row>
           <Col xs="12" md="12" sm="6">
+
+            { isSuccess && isSuccess.status && (
+              <Notification
+                type={ 'success' }
+                message={ isSuccess.message }
+                toggle={() => this.props.hideAlert()} />
+            )}
+            
+            { isError && (
+              <Notification
+                type={ 'danger' }
+                message={ isError.message }
+                toggle={() => this.props.hideAlert()} />
+            )}
+
             <Card>
               <CardHeader>
-                <i className="fa fa-align-justify"></i> Registrations <small className="text-muted">example</small>
+                <i className="fa fa-align-justify"></i> 
+                Registrations <small className="text-muted">example</small>
                 <Link to="/registrations/new" className="btn btn-primary btn-sm float-right">
                   <i className="fa fa-user-plus"></i> เพิ่ม
                 </Link>
@@ -64,7 +99,7 @@ class Registrations extends Component {
                       {/* <th scope="col">วันที่ D/C</th> */}
                       <th scope="col">PCU (รับดูแล)</th>
                       {/* <th scope="col">วันที่รับ Case</th> */}
-                      <th scope="col">Actions</th>
+                      <th scope="col" className="text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -81,7 +116,7 @@ class Registrations extends Component {
                         {/* <td>{regis.dchDate}</td> */}
                         <td>{regis.pcu}</td>
                         {/* <td>{regis.regDate}</td> */}
-                        <td style={{ textAlign: "center" }}>
+                        <td className="text-center">
                           <Link
                             to={`/registrations/edit/${regis.id}`}
                             className="btn btn-warning btn-sm mr-1"
@@ -116,10 +151,12 @@ class Registrations extends Component {
 
 const mapStateToProps = state => ({
   registrations: state.registration.registrations,
-  pager: state.registration.pager
+  pager: state.registration.pager,
+  isSuccess: state.registration.success,
+  isError: state.registration.errors
 });
 
 export default connect(
   mapStateToProps,
-  { fetchRegistrations }
+  { fetchRegistrations, fetchRegistration, deleteRegistration, hideAlert }
 )(Registrations);
