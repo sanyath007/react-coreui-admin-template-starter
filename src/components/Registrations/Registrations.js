@@ -42,7 +42,7 @@ class Registrations extends Component {
   handleDelete = (e, id) => {
     e.preventDefault();
 
-    if(window.confirm(`Are you sure to delete this patient (ID: ${id}) ?`)) {
+    if(window.confirm(`Are you sure to delete this registration (ID: ${id}) ?`)) {
       this.props.deleteRegistration(id)
     }
   }

@@ -164,7 +164,7 @@ class NewForm extends Component {
             <Card>
               <Form onSubmit={this.handleSubmit}>
                 <CardHeader>
-                  <strong>Visitions</strong>
+                  <strong>Add New Visition</strong>
                   <small> Form</small>
                 </CardHeader>
                 <CardBody>

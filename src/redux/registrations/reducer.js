@@ -136,7 +136,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        registrations: [...state.registrations, payload],
+        registrations: state.registrations.filter(registration => registration.id !== payload),
         errors: null,
         success: {
           status: true,

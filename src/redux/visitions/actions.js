@@ -34,18 +34,6 @@ export const fetchVisitions = link => dispatch => {
     });
 }
 
-export const fetchVisition = id => dispatch => {
-  dispatch({ type: FETCH_VISITION_REQUEST });
-
-  axios.get(`/api/imc/visitions/${id}`)
-    .then(res => {     
-      dispatch({ type: FETCH_VISITION_SUCCESS, payload: res.data.pager.data });
-    })
-    .catch(err => {
-      console.log(err.response);
-    });
-}
-
 export const addVisition = data => dispatch => {
   dispatch({ type: ADD_VISITION_REQUEST });
 
@@ -73,21 +61,40 @@ export const addVisition = data => dispatch => {
     });
 }
 
+export const fetchVisition = id => dispatch => {
+  dispatch({ type: FETCH_VISITION_REQUEST });
+
+  axios.get(`/api/imc/visitions/${id}`)
+    .then(res => {     
+      console.log(res.data[0]);
+      dispatch({ type: FETCH_VISITION_SUCCESS, payload: res.data[0] });
+    })
+    .catch(err => {
+      console.log(err.response);
+    });
+}
 
 export const updateVisition = (id, data, history) => dispatch => {
-  console.log(data);
-
   dispatch({ type: UPDATE_VISITION_REQUEST });
+
+  console.log(data);
 
   axios.put(`/api/imc/visitions/${id}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res => {
-    console.log(res.data)
-    dispatch({ type: UPDATE_VISITION_SUCCESS });
+    const { created_at, updated_at, ...updatedData } = res.data;
+
+    dispatch({
+      type: UPDATE_VISITION_SUCCESS,
+      payload: {
+        id: id,
+        visition: updatedData
+      }
+    });
   }).then(() => {
-    history.push('/registrations');
+    history.push('/visitions');
   }).catch(err => {
     dispatch({ type: UPDATE_VISITION_FAILED });
   });
@@ -104,7 +111,7 @@ export const deleteVisition = id => dispatch => {
   }).then(res => {
     dispatch({
       type: DELETE_VISITION_SUCCESS,
-      payload: res.data
+      payload: id
     })
   }).then(() => {
       dispatch(fetchVisitions());

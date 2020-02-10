@@ -2,6 +2,9 @@ import {
   FETCH_VISITIONS_REQUEST,
   FETCH_VISITIONS_SUCCESS,
   FETCH_VISITIONS_FAILED,
+  FETCH_VISITION_REQUEST,
+  FETCH_VISITION_SUCCESS,
+  FETCH_VISITION_FAILED,
   ADD_VISITION_REQUEST,
   ADD_VISITION_SUCCESS,
   ADD_VISITION_FAILED,
@@ -20,7 +23,7 @@ const initialState = {
   errors: null,
   success: null,
   visitions: [],
-  visition: null,
+  visition: {},
   pager: null
 };
 
@@ -60,28 +63,44 @@ export default function(state = initialState, action) {
         visitions: [...state.visitions, payload],
         errors: null
       };
-
-
-
-
+    case FETCH_VISITION_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+        case FETCH_VISITION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        visition: payload,
+        errors: null
+      };
+    case FETCH_VISITION_FAILED:
+      return {
+        ...state,
+        loading: false,
+        visition: {},
+        errors: payload,
+        success: null
+      };
     case UPDATE_VISITION_REQUEST:
       return {
         ...state,
         loading: true,
       };
     case UPDATE_VISITION_SUCCESS:
-      let updatedPatient = state.patients.map(patient => {
-        if(patient.id === payload.id) {
-          return payload.patient;
+      let updatedData = state.visitions.map(visition => {
+        if(visition.id === payload.id) {
+          return payload.visition;
         } else {
-          return patient;
+          return visition;
         }
       });
 
       return {
         ...state,
         loading: false,
-        patients: updatedPatient,
+        visitions: updatedData,
         errors: null,
         success: {
           status: true,
@@ -92,7 +111,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        patients: [],
+        visitions: [],
         errors: payload,
         success: null
       };
@@ -105,7 +124,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        patients: [...state.patients, payload],
+        visitions: state.visitions.filter(visition => visition.id !== payload),
         errors: null,
         success: {
           status: true,
@@ -116,7 +135,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        patients: [],
+        visitions: [],
         errors: payload,
         success: null
       };

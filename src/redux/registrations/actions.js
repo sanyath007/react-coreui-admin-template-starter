@@ -106,7 +106,7 @@ export const deleteRegistration = id => dispatch => {
   }).then(res => {
     dispatch({
       type: DELETE_REGISTRATION_SUCCESS,
-      payload: res.data
+      payload: id
     })
   }).then(() => {
       dispatch(fetchRegistrations());

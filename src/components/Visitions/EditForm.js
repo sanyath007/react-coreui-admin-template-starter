@@ -24,7 +24,7 @@ import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import ModalPatients from '../Modals/ModalPatients';
 import ModalBarthelIndex from '../Modals/ModalBarthelIndex';
 
-import { addVisition } from '../../redux/visitions';
+import { updateVisition } from '../../redux/visitions';
 import { addBarthel } from '../../redux/barthel';
 // CSS
 import 'react-tagsinput/react-tagsinput.css';
@@ -36,18 +36,20 @@ registerLocale('th', th)
 setDefaultLocale('th');
 
 const initialState = {
-  id: '',
-  pid: '',
-  patient_name: '',
-  visit_count: 1,
-  visit_date: '',
-  visitors: [],
-  barthel_score: '',
-  impairment: '',
-  complication: '',
-  is_rehab: '',
-  visit_status: '',
-  attachments: [],
+  visition: {
+    id: '',
+    pid: '',
+    patient_name: '',
+    visit_count: 1,
+    visit_date: '',
+    visitors: [],
+    barthel_score: '',
+    impairment: '',
+    complication: '',
+    is_rehab: '',
+    visit_status: '',
+    attachments: [],
+  },
   barthel: null,
   modalPatient: false,
   modalBarthel: false,
@@ -78,41 +80,72 @@ class NewForm extends Component {
   }
 
   static propTypes = {
-    addVisition: PropTypes.func.isRequired,
+    visition: PropTypes.any,
+    updateVisition: PropTypes.func.isRequired,
     addBarthel: PropTypes.func.isRequired
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.visition !== this.props.visition) {
+      const { age_y, created_at, updated_at, ...visition } = nextProps.visition
+
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          visition: {
+            visit_date: moment(visition.visit_date).format('DD/MM/YYYY'),
+            visitors: visition.visitors.split(','),
+            ...prevState.visition,
+            ...visition
+          }
+        };
+      });
+    }
+  }
 
   handleChange(e) {
     const { name, value } = e.target;
 
-    console.log(`name: ${name}, value: ${value}`)
-    this.setState({
-      [name]: value
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        visition: {
+          ...prevState.visition,
+          [name]: value
+        }
+      };
     });
   }
   
   handleDateChange = (name, date) => {
-    this.setState({ [name]: date });
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        visition: {
+          ...prevState.visition,
+          [name]: date
+        }
+      };
+    });
   }
   
   handleSubmit(e) {
     e.preventDefault();
-    
-    const { modalPatient, modalBarthel, patient_name, barthel, ...visition} = this.state;
 
     // Add patient pid and visition data to barthel
-    if(barthel) {
-      barthel['pid'] = this.state.pid;
-      barthel['visit_count'] = this.state.visit_count;
-      barthel['visit_date'] = moment(this.state.visit_date).format('YYYY-MM-DD');
+    // if(barthel) {
+    //   barthel['pid'] = this.state.pid;
+    //   barthel['visit_count'] = this.state.visit_count;
+    //   barthel['visit_date'] = moment(this.state.visit_date).format('YYYY-MM-DD');
   
-      this.props.addBarthel(barthel);
-    }
-
+    //   this.props.addBarthel(barthel);
+    // }
+    
+    const { id, patient_name, ...visition} = this.state.visition;
     // Cast datetime to string format
     visition['visit_date'] = moment(visition.visit_date).format('YYYY-MM-DD');
     // Store data to db.
-    this.props.addVisition(visition);
+    this.props.updateVisition(id, visition, this.props.history);
 
     this.setState( this.initialState);
   }
@@ -164,7 +197,7 @@ class NewForm extends Component {
             <Card>
               <Form onSubmit={this.handleSubmit}>
                 <CardHeader>
-                  <strong>Visitions</strong>
+                  <strong>Edit Visition</strong>
                   <small> Form</small>
                 </CardHeader>
                 <CardBody>
@@ -177,7 +210,7 @@ class NewForm extends Component {
                           id="pid"
                           name="pid"
                           type="text"
-                          value={this.state.pid}
+                          value={this.state.visition.pid}
                           onChange={this.handleChange}
                           placeholder="PID"
                         />
@@ -199,7 +232,7 @@ class NewForm extends Component {
                         id="patient_name"
                         name="patient_name"
                         type="text"
-                        value={this.state.patient_name}
+                        value={this.state.visition.patient_name}
                         placeholder="ชื่อ-สกุลผู้ป่วย"
                         readOnly
                       />
@@ -210,7 +243,7 @@ class NewForm extends Component {
                         type="select"
                         id="visit_count"
                         name="visit_count"
-                        value={this.state.visit_count}
+                        value={this.state.visition.visit_count}
                         onChange={this.handleChange}
                         placeholder="ครั้งที่"
                       >
@@ -233,7 +266,7 @@ class NewForm extends Component {
                         id="visit_date"
                         name="visit_date"
                         dateFormat="yyyy-MM-dd"
-                        selected={this.state.visit_date}
+                        selected={Date.parse(this.state.visition.visit_date)}
                         onChange={e => this.handleDateChange('visit_date', e)}
                         className="form-control"
                         placeholderText="วันที่เริ่มวินิจฉัย"
@@ -244,12 +277,12 @@ class NewForm extends Component {
                   <Row form>
                     <Col md="12" className="form-group">
                       <Label htmlFor="visitors">บุคลากร</Label>
-                      <TagsInput
+                      {/* <TagsInput
                         id="visitors"
                         name="visitors"
-                        value={this.state.visitors}
+                        value={this.state.visition.visitors}
                         onChange={this.handleTagsInputChange}
-                      />
+                      /> */}
                     </Col>
                   </Row>
 
@@ -261,7 +294,7 @@ class NewForm extends Component {
                           id="barthel_score"
                           name="barthel_score"
                           type="text"
-                          value={this.state.barthel_score}
+                          value={this.state.visition.barthel_score}
                           onChange={this.handleChange}
                           placeholder="Barthel Score"
                         />
@@ -283,7 +316,7 @@ class NewForm extends Component {
                         type="select"
                         id="impairment"
                         name="impairment"
-                        value={this.state.impairment}
+                        value={this.state.visition.impairment}
                         onChange={this.handleChange}
                       >
                         <option value="">Choose...</option>
@@ -300,7 +333,7 @@ class NewForm extends Component {
                         type="select"
                         id="complication"
                         name="complication"
-                        value={this.state.complication}
+                        value={this.state.visition.complication}
                         onChange={this.handleChange}
                       >
                         <option value="">Choose...</option>
@@ -316,12 +349,22 @@ class NewForm extends Component {
                       <Label htmlFor="road">การ Rehab</Label>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="is_rehab" value="1" onChange={this.handleChange} />{' '}ได้รับการ Rehab
+                          <Input
+                            type="radio"
+                            name="is_rehab"
+                            value="1"
+                            checked={this.state.visition.is_rehab === 1}
+                            onChange={this.handleChange} />{' '}ได้รับการ Rehab
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="is_rehab" value="0" onChange={this.handleChange} />{' '}ไม่ได้รับการ Rehab
+                          <Input
+                            type="radio"
+                            name="is_rehab"
+                            value="0"
+                            checked={this.state.visition.is_rehab === 0}
+                            onChange={this.handleChange} />{' '}ไม่ได้รับการ Rehab
                         </Label>
                       </FormGroup>
                     </Col>
@@ -329,25 +372,45 @@ class NewForm extends Component {
                       <Label htmlFor="moo">สถานะการเยี่ยม</Label>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="1" onChange={this.handleChange} />{' '}
+                          <Input
+                            type="radio"
+                            name="visit_status"
+                            value="1"
+                            checked={this.state.visition.visit_status === 1}
+                            onChange={this.handleChange} />{' '}
                           พบผู้ป่วย
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="0" onChange={this.handleChange} />{' '}
+                          <Input
+                            type="radio"
+                            name="visit_status"
+                            value="0"
+                            checked={this.state.visition.visit_status === 0}
+                            onChange={this.handleChange} />{' '}
                           ไม่พบผู้ป่วย
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="2" onChange={this.handleChange} />{' '}
+                          <Input
+                            type="radio"
+                            name="visit_status"
+                            value="2"
+                            checked={this.state.visition.visit_status === 2}
+                            onChange={this.handleChange} />{' '}
                           ผู้ป่วยย้ายที่อยู่
                         </Label>
                       </FormGroup>
                       <FormGroup check>
                         <Label check>
-                          <Input type="radio" name="visit_status" value="3" onChange={this.handleChange} />{' '}
+                          <Input
+                            type="radio"
+                            name="visit_status"
+                            value="3"
+                            checked={this.state.visition.visit_status === 3}
+                            onChange={this.handleChange} />{' '}
                           เสียชีวิตแล้ว
                         </Label>
                       </FormGroup>
@@ -357,7 +420,7 @@ class NewForm extends Component {
                   <Row form>
                     <Col md="12" className="form-group">
                       <Label htmlFor="attachments">รูปถ่าย/ไฟล์ </Label>
-                      <Dropzone onDrop={this.handleDrop} multiple>
+                      {/* <Dropzone onDrop={this.handleDrop} multiple>
                         {({getRootProps, getInputProps, isDragActive}) => (
                           <div {...getRootProps()} style={fileBoxStyle}>
                             <input {...getInputProps()} />
@@ -372,7 +435,7 @@ class NewForm extends Component {
                             </Row>
                           </div>
                         )}
-                      </Dropzone>
+                      </Dropzone> */}
                     </Col>
                   </Row>
           
@@ -403,7 +466,11 @@ class NewForm extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  visition: state.visition.visition
+});
+
 export default connect(
-  null,
-  { addVisition, addBarthel }
+  mapStateToProps,
+  { updateVisition, addBarthel }
 )(NewForm);

@@ -100,11 +100,11 @@ const routes = [
 
   { path: '/registrations', exact: true,  name: 'Registrations', component: Registrations },
   { path: '/registrations/new', exact: true, name: 'Add New Registration', component: RegistrationNew },
-  { path: '/registrations/edit/:id', exact: true, name: 'Edit New Registration', component: RegistrationEdit },
+  { path: '/registrations/edit/:id', exact: true, name: 'Edit Registration', component: RegistrationEdit },
   
   { path: '/visitions', exact: true,  name: 'Visitions', component: Visitions },
   { path: '/visitions/new', exact: true, name: 'Add New Visition', component: VisitionNew },
-  { path: '/visitions/edit/:id', exact: true, name: 'Edit New Visition', component: VisitionEdit },
+  { path: '/visitions/edit/:id', exact: true, name: 'Edit Visition', component: VisitionEdit },
 
   { path: '/barthel', exact: true, name: 'Barthel Index', component: BarthelIndex },
 ];

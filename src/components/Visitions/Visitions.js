@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fetchVisitions } from '../../redux/visitions';
+import { fetchVisitions, fetchVisition, deleteVisition, hideAlert } from '../../redux/visitions';
 
 import Notification from './../Notifications/Notification';
 import Pagination from '../Paginations/Pagination';
@@ -15,7 +15,10 @@ class Visitions extends Component {
     pager: PropTypes.object,
     isSuccess: PropTypes.any,
     isError: PropTypes.any,
-    fetchVisitions: PropTypes.func.isRequired
+    fetchVisitions: PropTypes.func.isRequired,
+    fetchVisition: PropTypes.func.isRequired,
+    deleteVisition: PropTypes.func.isRequired,
+    hideAlert: PropTypes.func
   };
 
   componentDidMount() {
@@ -31,16 +34,16 @@ class Visitions extends Component {
   handleEdit = (e, id) => {
     e.preventDefault();
 
-    this.props.fetchPatient(id);
+    this.props.fetchVisition(id);
 
-    this.props.history.push(`/patients/edit/${id}`)
+    this.props.history.push(`/visitions/edit/${id}`)
   }
 
   handleDelete = (e, id) => {
     e.preventDefault();
 
-    if(window.confirm(`Are you sure to delete this patient (ID: ${id}) ?`)) {
-      this.props.deletePatient(id)
+    if(window.confirm(`Are you sure to delete this visitions (ID: ${id}) ?`)) {
+      this.props.deleteVisition(id)
     }
   }
   
@@ -157,5 +160,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { fetchVisitions }
+  { fetchVisitions, fetchVisition, deleteVisition, hideAlert }
 )(Visitions);
