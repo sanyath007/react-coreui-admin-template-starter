@@ -30,7 +30,7 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        barthels: state.barthels.concat(payload),
+        barthels: payload,
         errors: null
       };
     case FETCH_BARTHELS_FAILED:

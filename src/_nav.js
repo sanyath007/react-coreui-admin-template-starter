@@ -9,6 +9,7 @@ export default {
         text: 'NEW',
       },
     },
+    /** ============== Main Menu ============== */
     // {
     //   title: true,
     //   name: 'Theme',
@@ -19,38 +20,44 @@ export default {
     //   class: ''             // optional class names space delimited list for title item ex: "text-center"
     // },
     {
-      name: 'Patients',
-      url: '/patients',
-      icon: 'icon-people',
-    },
-    {
-      name: 'Registrations',
+      name: 'ลงทะเบียนผู้ป่วย IMC',
       url: '/registrations',
       icon: 'icon-cursor',
     },
     {
-      name: 'Visitions',
+      name: 'การเยี่ยมบ้าน',
       url: '/visitions',
       icon: 'icon-directions',
     },
     {
-      name: 'Barthel Index',
+      name: 'ประเมิน Barthel Index',
       url: '/barthel',
       icon: 'icon-chart',
     },
     {
-      name: 'Rehabilitations',
+      name: 'ประเมิน Rehab OPD',
       url: '/rehabs',
       icon: 'icon-support',
     },
-    // {
-    //   title: true,
-    //   name: 'Components',
-    //   wrapper: {
-    //     element: '',
-    //     attributes: {},
-    //   },
-    // },
+    /** ============== System Menu ============== */
+    {
+      title: true,
+      name: 'ข้อมูลพื้นฐาน',
+      wrapper: {
+        element: '',
+        attributes: {},
+      },
+    },
+    {
+      name: 'ผู้ป่วย',
+      url: '/patients',
+      icon: 'icon-people',
+    },
+    {
+      name: 'ผู้ใช้งานระบบ',
+      url: '/users',
+      icon: 'icon-lock',
+    },
     // {
     //   name: 'Base',
     //   url: '/base',
