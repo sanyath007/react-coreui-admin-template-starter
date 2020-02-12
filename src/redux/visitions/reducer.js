@@ -56,6 +56,11 @@ export default function(state = initialState, action) {
         ...state,
         pager: payload
       };
+    case ADD_VISITION_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
     case ADD_VISITION_SUCCESS:
       return {
         ...state,
@@ -63,12 +68,20 @@ export default function(state = initialState, action) {
         visitions: [...state.visitions, payload],
         errors: null
       };
+    case ADD_VISITION_FAILED:
+      return {
+        ...state,
+        loading: false,
+        visition: {},
+        errors: payload,
+        success: null
+      };
     case FETCH_VISITION_REQUEST:
       return {
         ...state,
         loading: true,
       };
-        case FETCH_VISITION_SUCCESS:
+    case FETCH_VISITION_SUCCESS:
       return {
         ...state,
         loading: false,

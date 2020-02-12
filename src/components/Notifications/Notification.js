@@ -4,9 +4,11 @@ class Notification extends React.Component {
   componentDidMount() {
     console.log('Notification did mounted');
     
-    setTimeout(() => {
-      this.props.toggle();
-    }, 5000);
+    if(this.props.toggle) {
+      setTimeout(() => {
+        this.props.toggle();
+      }, 5000);
+    }
   }
 
   render() {

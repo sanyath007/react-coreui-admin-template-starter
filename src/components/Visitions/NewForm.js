@@ -23,6 +23,7 @@ import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 
 import ModalPatients from '../Modals/ModalPatients';
 import ModalBarthelIndex from '../Modals/ModalBarthelIndex';
+import Notification from './../Notifications/Notification';
 
 import { addVisition } from '../../redux/visitions';
 import { addBarthel } from '../../redux/barthel';
@@ -78,6 +79,7 @@ class NewForm extends Component {
   }
 
   static propTypes = {
+    errors: PropTypes.any,
     addVisition: PropTypes.func.isRequired,
     addBarthel: PropTypes.func.isRequired
   };
@@ -115,6 +117,8 @@ class NewForm extends Component {
     this.props.addVisition(visition);
 
     this.setState( this.initialState);
+
+    this.props.history.push('/visitions');
   }
 
   handleTagsInputChange (tags) {
@@ -157,6 +161,8 @@ class NewForm extends Component {
   }
 
   render () {
+    const { errors } = this.props;
+
     return (
       <div className="animated fadeIn">
         <Row>
@@ -180,6 +186,7 @@ class NewForm extends Component {
                           value={this.state.pid}
                           onChange={this.handleChange}
                           placeholder="PID"
+                          className={`${(errors && errors.errors.pid) ? 'is-invalid' : ''} form-control`}
                         />
                         <div className="input-group-append">
                           <button 
@@ -190,6 +197,11 @@ class NewForm extends Component {
                           >
                             <i className="material-icons">search</i>
                           </button>
+                        </div>
+                        <div className="invalid-feedback">
+                          {errors && errors.errors.pid && errors.errors.pid.map(msg => {
+                            return msg;
+                          })}
                         </div>
                       </div>
                     </Col>
@@ -229,15 +241,21 @@ class NewForm extends Component {
                         onChange={this.handleChange}
                         placeholder="วันที่เยี่ยมบ้าน"
                       /> */}
-                      <DatePicker
-                        id="visit_date"
-                        name="visit_date"
-                        dateFormat="yyyy-MM-dd"
-                        selected={this.state.visit_date}
-                        onChange={e => this.handleDateChange('visit_date', e)}
-                        className="form-control"
-                        placeholderText="วันที่เริ่มวินิจฉัย"
-                      />
+                      <div>
+                        <DatePicker
+                          id="visit_date"
+                          name="visit_date"
+                          dateFormat="yyyy-MM-dd"
+                          selected={this.state.visit_date}
+                          onChange={e => this.handleDateChange('visit_date', e)}
+                          className={`${(errors && errors.errors.visit_date) ? 'is-invalid' : ''} form-control`}
+                          placeholderText="วันที่เริ่มวินิจฉัย"
+                        />
+                        
+                        <div className="error">
+                          {errors && errors.errors.visit_date && errors.errors.visit_date[0]}
+                        </div>
+                      </div>
                     </Col>
                   </Row>
 
@@ -264,6 +282,7 @@ class NewForm extends Component {
                           value={this.state.barthel_score}
                           onChange={this.handleChange}
                           placeholder="Barthel Score"
+                          className={`${(errors && errors.errors.barthel_score) ? 'is-invalid' : ''} form-control`}
                         />
                         <div className="input-group-append">
                           <button
@@ -275,6 +294,12 @@ class NewForm extends Component {
                             <i className="material-icons">ประเมิน</i>
                           </button>
                         </div>
+
+                        <div className="invalid-feedback">
+                          {errors && errors.errors.barthel_score && errors.errors.barthel_score.map(msg => {
+                            return msg;
+                          })}
+                        </div>
                       </div>
                     </Col>
                     <Col md="4" className="form-group">
@@ -285,6 +310,7 @@ class NewForm extends Component {
                         name="impairment"
                         value={this.state.impairment}
                         onChange={this.handleChange}
+                        className={`${(errors && errors.errors.impairment) ? 'is-invalid' : ''} form-control`}
                       >
                         <option value="">Choose...</option>
                         <option value="1">Swallowing problem</option>
@@ -293,6 +319,12 @@ class NewForm extends Component {
                         <option value="4">Cognitive and perception problem</option>
                         <option value="5">Bowel and bladder problem</option>
                       </Input>
+                      
+                      <div className="invalid-feedback">
+                          {errors && errors.errors.impairment && errors.errors.impairment.map(msg => {
+                            return msg;
+                          })}
+                        </div>
                     </Col>
                     <Col md="4">
                       <Label htmlFor="sex">Complication</Label>
@@ -302,12 +334,19 @@ class NewForm extends Component {
                         name="complication"
                         value={this.state.complication}
                         onChange={this.handleChange}
+                        className={`${(errors && errors.errors.complication) ? 'is-invalid' : ''} form-control`}
                       >
                         <option value="">Choose...</option>
                         <option value="1">Bedsore grade (1-4)</option>
                         <option value="2">Urinary tract infection (UTI)</option>
                         <option value="3">Aspirate pneumonia</option>
                       </Input>
+                      
+                      <div className="invalid-feedback">
+                          {errors && errors.errors.complication && errors.errors.complication.map(msg => {
+                            return msg;
+                          })}
+                        </div>
                     </Col>
                   </Row>
 
@@ -403,7 +442,11 @@ class NewForm extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  errors: state.visition.errors
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { addVisition, addBarthel }
 )(NewForm);

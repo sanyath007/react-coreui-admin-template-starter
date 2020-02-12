@@ -6,8 +6,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
+import { ToastContainer } from 'react-toastify';
 
 import './index.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 import App from './App';
 
 import guardAuth from './utils/guardAuth';
@@ -20,11 +22,24 @@ if(process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 }
 
+axios.interceptors.response.use(res => {
+  console.log('on response is successfully...')  
+  console.log(res);
+
+  return res;
+}, err => {
+  console.log('on response is failure...')
+  console.log(err)
+
+  return Promise.reject(err);
+});
+
 guardAuth(localStorage.jwtToken, store);
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
+    <ToastContainer autoClose={3000} />
   </Provider>, 
   document.getElementById('root')
 );

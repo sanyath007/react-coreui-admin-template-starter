@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   FETCH_VISITIONS_REQUEST,
   FETCH_VISITIONS_SUCCESS,
@@ -25,13 +26,13 @@ export const fetchVisitions = link => dispatch => {
   dispatch({ type: FETCH_VISITIONS_REQUEST });
 
   axios.get(apiEnpoint)
-    .then(res => {     
-      dispatch({ type: FETCH_VISITIONS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_VISITIONS_PAGER, payload: res.data.pager });      
-    })
-    .catch(err => {
-      console.log(err.response);
-    });
+  .then(res => {     
+    dispatch({ type: FETCH_VISITIONS_SUCCESS, payload: res.data.pager.data });
+    dispatch({ type: SET_VISITIONS_PAGER, payload: res.data.pager });      
+  })
+  .catch(err => {
+    toast.error('Error !!');
+  });
 }
 
 export const addVisition = data => dispatch => {
@@ -52,38 +53,39 @@ export const addVisition = data => dispatch => {
       'Content-Type': 'multipart/form-data'
     }
   }).then(res => {
-      dispatch({ type: ADD_VISITION_SUCCESS, payload: res.data });
-    }).then(() => {
+    toast.success('Successful !!');
 
-    }).catch(err => {
-      console.log(err.response);
-      dispatch({ type: ADD_VISITION_FAILED });
-    });
+    dispatch({ type: ADD_VISITION_SUCCESS, payload: res.data });
+  }).then(() => {
+    dispatch(fetchVisitions());
+  }).catch(err => {
+    toast.error('Error !!');
+
+    dispatch({ type: ADD_VISITION_FAILED, payload: err.response.data });
+  });
 }
 
 export const fetchVisition = id => dispatch => {
   dispatch({ type: FETCH_VISITION_REQUEST });
 
   axios.get(`/api/imc/visitions/${id}`)
-    .then(res => {     
-      console.log(res.data[0]);
+    .then(res => {
       dispatch({ type: FETCH_VISITION_SUCCESS, payload: res.data[0] });
     })
     .catch(err => {
-      console.log(err.response);
+      toast.error('Error !!');
     });
 }
 
 export const updateVisition = (id, data, history) => dispatch => {
   dispatch({ type: UPDATE_VISITION_REQUEST });
 
-  console.log(data);
-
   axios.put(`/api/imc/visitions/${id}`, data, {
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
     const { created_at, updated_at, ...updatedData } = res.data;
 
     dispatch({
@@ -96,6 +98,8 @@ export const updateVisition = (id, data, history) => dispatch => {
   }).then(() => {
     history.push('/visitions');
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({ type: UPDATE_VISITION_FAILED });
   });
 }
@@ -103,12 +107,12 @@ export const updateVisition = (id, data, history) => dispatch => {
 export const deleteVisition = id => dispatch => {
   dispatch({ type: DELETE_VISITION_REQUEST });
 
-  console.log(id);
   axios.delete(`/api/imc/visitions/${id}`, {
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
     dispatch({
       type: DELETE_VISITION_SUCCESS,
       payload: id
@@ -116,6 +120,8 @@ export const deleteVisition = id => dispatch => {
   }).then(() => {
       dispatch(fetchVisitions());
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({ 
       type: DELETE_VISITION_FAILED,
       payload: {
