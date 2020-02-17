@@ -13,7 +13,6 @@ import {
   Label,
   Row,
 } from 'reactstrap';
-import moment from 'moment';
 
 import { fetchHosps, fetchPcus } from '../../redux/hospcode';
 import { addRegistration } from '../../redux/registrations';
@@ -122,7 +121,7 @@ class NewForm extends Component {
   }
 
   render () {
-    const { hosps, pcus, pagerPatients, pagerIcd10s } = this.props;
+    const { hosps, pcus } = this.props;
     
     return (
       <div className="animated fadeIn">

@@ -20,7 +20,6 @@ class ModalICD10s extends Component {
   handlePaginateLink = (e, link) => {
     e.preventDefault();
 
-    console.log(link)
     this.props.fetchIcd10s(link);
   }
 

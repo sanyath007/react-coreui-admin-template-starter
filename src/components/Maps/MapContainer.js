@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 
 const mapStyles = {
-  width: '100%',
-  height: '100%',
+  width: '97%',
+  height: '94%',
 };
 
 class MapContainer extends Component {
@@ -20,6 +20,7 @@ class MapContainer extends Component {
         zoom={8}
         style={mapStyles}
         initialCenter={{ lat: 14.985, lng: 102.099 }}
+        onClick={(obj, map, {latLng}) => console.log(latLng.lat(), latLng.lng())}
       >
         <Marker position={{ lat: 14.962540, lng: 102.116053 }} />
       </Map>

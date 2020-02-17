@@ -25,9 +25,7 @@ const Pagination = ({pager, onPaginateLink}) => {
     }
   }
   
-  console.log(`startPage: ${startPage}, endPage: ${endPage}`)
   let pages = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
-  console.log(pages)
 
   return (
     <nav aria-label="..." className="float-right">

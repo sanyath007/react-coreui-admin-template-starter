@@ -105,7 +105,7 @@ class Tabs extends Component {
             </Nav>
             <TabContent activeTab={this.state.activeTab[1]}>
               {this.tabPane()}
-              </TabContent>
+            </TabContent>
           </Col>
           <Col xs="12" md="6" className="mb-4">
             <Nav tabs>

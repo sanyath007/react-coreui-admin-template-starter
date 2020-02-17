@@ -43,7 +43,7 @@ const PatientNew = React.lazy(() => import('./components/Patients/NewForm'));
 const PatientEdit = React.lazy(() => import('./components/Patients/EditForm'));
 
 const Registrations = React.lazy(() => import('./components/Registrations/Registrations'));
-const RegistrationNew = React.lazy(() => import('./components/Registrations/NewForm'));
+const RegistrationNew = React.lazy(() => import('./components/Registrations/NewFormContainer'));
 const RegistrationEdit = React.lazy(() => import('./components/Registrations/EditForm'));
 
 const Visitions = React.lazy(() => import('./components/Visitions/Visitions'));
