@@ -80,7 +80,7 @@ class NewForm extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Row form>
+        {/* <Row form>
           <Col md="4" className="form-group">
             <Label htmlFor="pid">PID</Label>
             <Input
@@ -114,7 +114,7 @@ class NewForm extends Component {
               placeholder="เลขบัตรประชาชน"
             />
           </Col>
-        </Row>
+        </Row> */}
 
         <Row form>
           <Col md="2" className="form-group">
@@ -159,27 +159,33 @@ class NewForm extends Component {
         </Row>
 
         <Row form>
-          <Col md="6" className="form-group">
-            <Label htmlFor="birthdate">วันเกิด</Label>
-            {/* <Input
-              id="birthdate"
-              name="birthdate"
+        <Col md="4" className="form-group">
+            <Label htmlFor="cid">เลขบัตรประชาชน</Label>
+            <Input 
+              id="cid"
+              name="cid"
               type="text"
-              value={this.props.birthdate}
+              value={this.props.patient.cid}
               onChange={this.props.handleChange}
-              placeholder="วันเกิด"
-            /> */}
+              placeholder="เลขบัตรประชาชน"
+            />
+          </Col>
+          <Col md="4" className="form-group">
+            <Label htmlFor="birthdate">วันเกิด</Label>
             <DatePicker
               id="birthdate"
               name="birthdate"
               dateFormat="yyyy-MM-dd"
               selected={this.props.patient.birthdate}
               onChange={e => this.props.handleDateChange('birthdate', e)}
-              className="form-control"
+              className={`${(this.props.errors && this.props.errors.birthdate) ? 'is-invalid' : ''} form-control`}
               placeholderText="วันที่เกิด"
             />
+            <div className="error">
+              {this.props.errors && this.props.errors.birthdate && this.props.errors.birthdate[0]}
+            </div>
           </Col>
-          <Col md="3" className="form-group">
+          <Col md="2" className="form-group">
             <Label htmlFor="ageY">อายุ</Label>
             <Input
               id="age_y"
@@ -190,7 +196,7 @@ class NewForm extends Component {
               placeholder="อายุ"
             />
           </Col>
-          <Col md="3">
+          <Col md="2">
             <Label htmlFor="sex">เพศ</Label>
             <Input type="select"
               id="sex"

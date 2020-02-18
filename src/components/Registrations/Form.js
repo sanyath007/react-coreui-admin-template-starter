@@ -28,6 +28,7 @@ class NewForm extends Component {
   }
 
   render () {    
+    console.log(this.props.errors)
     return (
       <div className="animated fadeIn">
         <Row form>
@@ -39,9 +40,12 @@ class NewForm extends Component {
               dateFormat="yyyy-MM-dd"
               selected={this.props.registration.dx_date}
               onChange={e => this.props.handleDateChange('dx_date', e)}
-              className="form-control"
+              className={`${(this.props.errors && this.props.errors.dx_date) ? 'is-invalid' : ''} form-control`}
               placeholderText="วันที่เริ่มวินิจฉัย"
             />
+            <div className="error">
+              {this.props.errors && this.props.errors.dx_date && this.props.errors.dx_date[0]}
+            </div>
           </Col>
         </Row>
 
@@ -55,6 +59,7 @@ class NewForm extends Component {
                 type="text"
                 value={this.props.registration.dx}
                 onChange={this.props.handleChange}
+                className={`${(this.props.errors && this.props.errors.dx) ? 'is-invalid' : ''} form-control`}
                 placeholder="ICD10"
               />
               <div className="input-group-append">
@@ -66,6 +71,11 @@ class NewForm extends Component {
                 >
                   <i className="material-icons">search</i>
                 </button>
+              </div>
+              <div className="invalid-feedback">
+                {this.props.errors && this.props.errors.dx && this.props.errors.dx.map(msg => {
+                  return msg;
+                })}
               </div>
             </div>
           </Col>
@@ -92,12 +102,18 @@ class NewForm extends Component {
               name="dch_hosp"
               value={this.props.registration.dch_hosp}
               onChange={this.props.handleChange}
+              className={`${(this.props.errors && this.props.errors.dch_hosp) ? 'is-invalid' : ''} form-control`}
             >
               <option>Choose...</option>
               { this.props.hosps && this.props.hosps.map((h) => (
                 <option key={h.hospcode} value={h.hospcode}>{h.name}</option>
               ))}
             </Input>
+            <div className="invalid-feedback">
+              {this.props.errors && this.props.errors.dch_hosp && this.props.errors.dch_hosp.map(msg => {
+                return msg;
+              })}
+            </div>
           </Col>
           <Col md="3" className="form-group">
             <Label htmlFor="dchDate">วันที่จำหน่าย</Label>
@@ -107,9 +123,12 @@ class NewForm extends Component {
               dateFormat="yyyy-MM-dd"
               selected={this.props.registration.dch_date}
               onChange={e => this.props.handleDateChange('dch_date', e)}
-              className="form-control"
+              className={`${(this.props.errors && this.props.errors.dch_date) ? 'is-invalid' : ''} form-control`}
               placeholderText="วันที่จำหน่าย"
             />
+            <div className="error">
+              {this.props.errors && this.props.errors.dch_date && this.props.errors.dch_date[0]}
+            </div>
           </Col>
         </Row>
 
@@ -122,12 +141,18 @@ class NewForm extends Component {
               name="pcu"
               value={this.props.registration.pcu}
               onChange={this.props.handleChange}
+              className={`${(this.props.errors && this.props.errors.pcu) ? 'is-invalid' : ''} form-control`}
             >
               <option>Choose...</option>
               { this.props.pcus && this.props.pcus.map((h) => (
                 <option key={h.hospcode} value={h.hospcode}>{h.name}</option>
               ))}
             </Input>
+            <div className="invalid-feedback">
+              {this.props.errors && this.props.errors.pcu && this.props.errors.pcu.map(msg => {
+                return msg;
+              })}
+            </div>
           </Col>
           <Col md="3" className="form-group">
             <Label htmlFor="regDate">วันที่รับ Case</Label>
@@ -137,9 +162,12 @@ class NewForm extends Component {
               dateFormat="yyyy-MM-dd"
               selected={this.props.registration.reg_date}
               onChange={e => this.props.handleDateChange('reg_date', e)}
-              className="form-control"
+              className={`${(this.props.errors && this.props.errors.reg_date) ? 'is-invalid' : ''} form-control`}
               placeholderText="วันที่รับ Case"
             />
+            <div className="error">
+              {this.props.errors && this.props.errors.reg_date && this.props.errors.reg_date[0]}
+            </div>
           </Col>
         </Row>
       </div>

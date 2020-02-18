@@ -28,7 +28,6 @@ import ModalICD10s from '../Modals/ModalICD10s';
 const initialState = {
   registration: {
     cid: '',
-    patient_name: '',
     dx: '',
     dx_desc: '',
     dx_date: '',
@@ -144,15 +143,22 @@ class NewFormContainer extends Component {
     
     const { patient, registration } = this.state;
 
-    registration.cid = patient.cid;
-    registration.reg_date = moment(registration.reg_date).format('YYYY-MM-DD');
-    registration.dx_date = moment(registration.dx_date).format('YYYY-MM-DD');
-    registration.dch_date = moment(registration.dch_date).format('YYYY-MM-DD');
+    const newRegistration = {
+      ...registration,
+      cid: patient.cid,
+      reg_date: moment(registration.reg_date).format('YYYY-MM-DD'),
+      dx_date: moment(registration.dx_date).format('YYYY-MM-DD'),
+      dch_date: moment(registration.dch_date).format('YYYY-MM-DD'),
+    }
 
-    patient.birthdate = moment(patient.birthdate).format('YYYY-MM-DD');
+    const newPatient = {
+      ...patient,
+      birthdate: moment(patient.birthdate).format('YYYY-MM-DD'),
+    }
 
-    console.log(patient, registration)
-    // this.props.addRegistration(registration);
+    console.log(newPatient, newRegistration)
+    // this.props.addPatient(newPatient);
+    this.props.addRegistration(newRegistration);
 
     // this.setState(initialState);
 
@@ -191,6 +197,7 @@ class NewFormContainer extends Component {
             patient={this.state.patient}
             handleChange={this.handleChange}
             handleDateChange={this.handleDateChange}
+            errors={this.props.patientErrors}
           />
         </TabPane>
         <TabPane tabId="2">
@@ -199,6 +206,7 @@ class NewFormContainer extends Component {
             handleChange={this.handleChange}
             handleDateChange={this.handleDateChange}
             toggleModalIcd10={this.toggleModalIcd10}
+            errors={this.props.regisErrors}
           />
         </TabPane>
       </>
@@ -259,8 +267,13 @@ class NewFormContainer extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  patientErrors: state.patient.errors,
+  regisErrors: state.registration.errors
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   {
     addPatient,
     addRegistration

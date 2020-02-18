@@ -92,7 +92,7 @@ export default function(state = initialState, action) {
         ...state,
         loading: false,
         registrations: [],
-        errors: payload,
+        errors: payload.errors,
         success: null
       };
     case UPDATE_REGISTRATION_REQUEST:

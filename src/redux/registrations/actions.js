@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   FETCH_REGISTRATIONS_REQUEST,
   FETCH_REGISTRATIONS_SUCCESS,
@@ -38,12 +39,14 @@ export const fetchRegistrations = link => dispatch => {
 
 export const addRegistration = data => dispatch => {
   dispatch({ type: FETCH_REGISTRATION_REQUEST });
-  
+
+  console.log(data)
   axios.post('/api/imc/registrations', data, {
     headers: {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
     console.log(res.data)
     dispatch({
       type: ADD_REGISTRATION_SUCCESS,
@@ -52,7 +55,9 @@ export const addRegistration = data => dispatch => {
   }).then(() => {
     dispatch(fetchRegistrations());
   }).catch(err => {
-    dispatch({ type: ADD_REGISTRATION_FAILED });
+    toast.error('Error !!');
+    
+    dispatch({ type: ADD_REGISTRATION_FAILED, payload: err.response.data });
   })
 }
 
@@ -65,7 +70,9 @@ export const fetchRegistration = id => dispatch => {
     dispatch({ type: FETCH_REGISTRATION_SUCCESS, payload: res.data[0] });      
   })
   .catch(err => {
-    console.log(err.response);
+    toast.error('Error !!');
+
+    dispatch({ type: FETCH_REGISTRATION_FAILED });
   })
 }
 
@@ -77,6 +84,8 @@ export const updateRegistration = (id, data, history) => dispatch => {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
+
     const { created_at, updated_at, ...updatedData } = res.data;
 
     dispatch({
@@ -89,6 +98,8 @@ export const updateRegistration = (id, data, history) => dispatch => {
   }).then(() => {
     history.push('/registrations');
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({
       type: UPDATE_REGISTRATION_FAILED,
       payload: {}
@@ -104,6 +115,8 @@ export const deleteRegistration = id => dispatch => {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
+
     dispatch({
       type: DELETE_REGISTRATION_SUCCESS,
       payload: id
@@ -111,6 +124,8 @@ export const deleteRegistration = id => dispatch => {
   }).then(() => {
       dispatch(fetchRegistrations());
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({ 
       type: DELETE_REGISTRATION_FAILED,
       payload: {
