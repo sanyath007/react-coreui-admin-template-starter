@@ -138,6 +138,32 @@ class NewFormContainer extends Component {
     }
   }
   
+  calAgeYFromBirthdate = (value) => {
+    let _bdY = moment(value).format('YYYY');
+    let _curY = moment(Date.now()).format('YYYY');
+    let _ageY = _curY - _bdY;
+
+    this.setState(prevState => ({
+      ...prevState,
+      patient: {
+        ...prevState.patient,
+        age_y: _ageY.toString(),
+      }
+    }));
+  }
+
+  handleSelectedPname = (value) => {
+    let _sex = ([2,4,5].indexOf(parseInt(value)) !== -1) ? 2 : 1;
+    
+    this.setState(prevState => ({
+      ...prevState,
+      patient: {
+        ...prevState.patient,
+        sex: _sex.toString(),
+      }
+    }));
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     
@@ -148,16 +174,16 @@ class NewFormContainer extends Component {
       cid: patient.cid,
       reg_date: moment(registration.reg_date).format('YYYY-MM-DD'),
       dx_date: moment(registration.dx_date).format('YYYY-MM-DD'),
-      dch_date: moment(registration.dch_date).format('YYYY-MM-DD'),
+      dch_date: moment(registration.dch_date).format('YYYY-MM-DD')
     }
 
     const newPatient = {
       ...patient,
-      birthdate: moment(patient.birthdate).format('YYYY-MM-DD'),
+      birthdate: moment(patient.birthdate).format('YYYY-MM-DD')
     }
 
     console.log(newPatient, newRegistration)
-    // this.props.addPatient(newPatient);
+    this.props.addPatient(newPatient);
     this.props.addRegistration(newRegistration);
 
     // this.setState(initialState);
@@ -197,6 +223,8 @@ class NewFormContainer extends Component {
             patient={this.state.patient}
             handleChange={this.handleChange}
             handleDateChange={this.handleDateChange}
+            handleSelectedPname={this.handleSelectedPname}
+            calAgeYFromBirthdate={this.calAgeYFromBirthdate}
             errors={this.props.patientErrors}
           />
         </TabPane>

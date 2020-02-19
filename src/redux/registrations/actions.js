@@ -26,15 +26,17 @@ export const fetchRegistrations = link => dispatch => {
   dispatch({ type: FETCH_REGISTRATIONS_REQUEST });
   
   axios.get(apiEnpoint)
-    .then(res => {
-      console.log(res.data);
-      
-      dispatch({ type: FETCH_REGISTRATIONS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_REGISTRATIONS_PAGER, payload: res.data.pager });      
-    })
-    .catch(err => {
-      console.log(err.response);
-    })
+  .then(res => {
+    console.log(res.data);
+    
+    dispatch({ type: FETCH_REGISTRATIONS_SUCCESS, payload: res.data.pager.data });
+    dispatch({ type: SET_REGISTRATIONS_PAGER, payload: res.data.pager });      
+  })
+  .catch(err => {
+    toast.error('Error !!');
+    
+    console.log(err.response);
+  });
 }
 
 export const addRegistration = data => dispatch => {

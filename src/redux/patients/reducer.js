@@ -97,7 +97,7 @@ export default function(state = initialState, action) {
         ...state,
         loading: false,
         patients: [],
-        errors: payload,
+        errors: payload.errors,
         success: null
       };
     case UPDATE_PATIENT_REQUEST:

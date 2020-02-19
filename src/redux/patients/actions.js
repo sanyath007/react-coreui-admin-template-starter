@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import { isObject, isEmpty }  from 'lodash';
 import {
   FETCH_PATIENTS_REQUEST,
@@ -27,21 +28,21 @@ export const fetchPatients = link => dispatch => {
   dispatch({ type: FETCH_PATIENTS_REQUEST });
 
   axios.get(apiEnpoint)
-    .then(res => {
-      dispatch({ type: FETCH_PATIENTS_SUCCESS, payload: res.data.pager.data });
-      dispatch({ type: SET_PATIENTS_PAGER, payload: res.data.pager });
-    })
-    .catch(err => {
-      console.log(err.response);
-      console.log(!isEmpty(err.response.data.message));
-      dispatch({ 
-        type: FETCH_PATIENTS_FAILED,
-        payload: {
-          status: err.response.status,
-          message: getErrorMessage(err.response)
-        }
-      });
+  .then(res => {
+    dispatch({ type: FETCH_PATIENTS_SUCCESS, payload: res.data.pager.data });
+    dispatch({ type: SET_PATIENTS_PAGER, payload: res.data.pager });
+  })
+  .catch(err => {
+    toast.error('Error !!');
+
+    dispatch({ 
+      type: FETCH_PATIENTS_FAILED,
+      payload: {
+        status: err.response.status,
+        message: getErrorMessage(err.response)
+      }
     });
+  });
 }
 
 function getErrorMessage(resData) {
@@ -58,19 +59,21 @@ export const fetchPatient = id => dispatch => {
   dispatch({ type: FETCH_PATIENT_REQUEST });
 
   axios.get(`/api/imc/patients/${id}`)
-    .then(res => {
-      console.log(res.data.patient[0]);
-      dispatch({ type: FETCH_PATIENT_SUCCESS, payload: res.data.patient[0] });
-    })
-    .catch(err => {
-      dispatch({ 
-        type: FETCH_PATIENT_FAILED,
-        payload: {
-          status: err.response.status,
-          message: err.response.data.message
-        }
-      });
+  .then(res => {
+    console.log(res.data.patient[0]);
+    dispatch({ type: FETCH_PATIENT_SUCCESS, payload: res.data.patient[0] });
+  })
+  .catch(err => {
+    toast.error('Error !!');
+
+    dispatch({ 
+      type: FETCH_PATIENT_FAILED,
+      payload: {
+        status: err.response.status,
+        message: err.response.data.message
+      }
     });
+  });
 }
 
 export const addPatient = (patient) => dispatch => {
@@ -81,6 +84,8 @@ export const addPatient = (patient) => dispatch => {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
+
     dispatch({
       type: ADD_PATIENT_SUCCESS,
       payload: res.data
@@ -88,13 +93,9 @@ export const addPatient = (patient) => dispatch => {
   }).then(() => {
     dispatch(fetchPatients());
   }).catch(err => {
-    dispatch({ 
-      type: ADD_PATIENT_FAILED,
-      payload: {
-        status: err.response.status,
-        message: err.response.data.message
-      }
-    });
+    toast.error('Error !!');
+
+    dispatch({ type: ADD_PATIENT_FAILED, payload: err.response.data });
   });
 }
 
@@ -106,6 +107,8 @@ export const updatePatient = (id, patient, history) => dispatch => {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
+
     dispatch({
       type: UPDATE_PATIENT_SUCCESS,
       payload: {
@@ -116,6 +119,8 @@ export const updatePatient = (id, patient, history) => dispatch => {
   }).then(() => {
     history.push('/patients');
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({ 
       type: UPDATE_PATIENT_FAILED,
       payload: {
@@ -135,6 +140,8 @@ export const deletePatient = id => dispatch => {
       'Content-Type': 'application/json'
     }
   }).then(res => {
+    toast.success('Successful !!');
+
     dispatch({
       type: DELETE_PATIENT_SUCCESS,
       payload: res.data
@@ -142,6 +149,8 @@ export const deletePatient = id => dispatch => {
   }).then(() => {
       dispatch(fetchPatients());
   }).catch(err => {
+    toast.error('Error !!');
+
     dispatch({ 
       type: DELETE_PATIENT_FAILED,
       payload: {
